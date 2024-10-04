@@ -1,0 +1,30 @@
+version: "3.8"
+services:
+  mysql-local:
+    container_name: mysql-local
+    image: mysql:latest
+    ports:
+      - "3306:3306"
+    environment:
+      - MYSQL_DATABASE=root
+      - MYSQL_ROOT_PASSWORD=password
+      - MYSQL_USER=dbuser
+      - MYSQL_PASSWORD=password
+    volumes:
+      - my-db:/var/lib/mysql
+      - ./database-setup:/docker-entrypoint-initdb.d
+    networks:
+      - spring-cloud-network
+    healthcheck:
+      test: [ "CMD", "mysqladmin" ,"ping", "-h", "localhost" ]
+      interval: 10s
+      retries: 10
+      start_period: 10s
+      timeout: 3s
+
+volumes:
+  my-db:
+
+networks:
+  spring-cloud-network:
+    driver: bridge
