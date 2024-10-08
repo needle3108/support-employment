@@ -6,7 +6,7 @@ services:
     ports:
       - "3306:3306"
     environment:
-      - MYSQL_DATABASE=root
+      - MYSQL_DATABASE=EmploymentSupport
       - MYSQL_ROOT_PASSWORD=password
       - MYSQL_USER=dbuser
       - MYSQL_PASSWORD=password
@@ -22,9 +22,48 @@ services:
       start_period: 10s
       timeout: 3s
 
+  backend:
+    container_name: backend
+    image: backend:latest
+    build:
+      context: ../backend
+      dockerfile: ../backend/Dockerfile
+    depends_on:
+      mysql-local:
+        condition: service_healthy
+    environment:
+      DB_HOST: mysql-local
+      DB_NAME: EmploymentSupport
+      DB_USER: "dbuser"
+      DB_PASSWORD: "password"
+    ports:
+      - "8080:8080"
+    networks:
+      - spring-cloud-network
+      - spring-react
+
+  frontend:
+    container_name: frontend
+    image: frontend:latest
+    build:
+      context: ../frontend
+      dockerfile: ../frontend/Dockerfile
+    ports:
+      - "3000:3000"
+    stdin_open: true
+    environment:
+      - CHOKIDAR_USEPOLLING=true
+    depends_on:
+      - backend
+    networks:
+      - spring-react
+    command: npm start
+
 volumes:
   my-db:
 
 networks:
   spring-cloud-network:
+    driver: bridge
+  spring-react:
     driver: bridge
