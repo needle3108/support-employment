@@ -5,15 +5,15 @@ USE EmploymentSupport;
 CREATE TABLE IF NOT EXISTS Candidate(
     id INT NOT NULL AUTO_INCREMENT,
     email VARCHAR(255) NOT NULL,
+    firstName VARCHAR(255) NOT NULL,
+    lastName VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
-    name VARCHAR(255) NOT NULL,
-    last_name VARCHAR(255) NOT NULL,
-    age INT NOT NULL,
+    phoneNumber INT DEFAULT NULL,
     city VARCHAR(255) NOT NULL,
-    profession VARCHAR(255) NOT NULL,
-    phone_number INT DEFAULT NULL,
     description VARCHAR(2000) DEFAULT NULL,
     photo_file_path VARCHAR(255) DEFAULT NULL,
+    age INT NOT NULL,
+    profession VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (id)
 );
