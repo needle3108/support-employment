@@ -60,8 +60,6 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        System.out.println("Jestem");
-
         Candidate candidate = new Candidate(
                 signupRequest.getEmail(),
                 signupRequest.getFirstName(),

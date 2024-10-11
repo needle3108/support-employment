@@ -48,9 +48,13 @@ services:
     build:
       context: ../frontend
       dockerfile: ../frontend/Dockerfile
+    volumes:
+      - ../frontend:/app/frontend
+    command: bash -c "cd /app/frontend && \
+      npm install && \
+      npm start"
     ports:
       - "3000:3000"
-    stdin_open: true
     depends_on:
       - backend
     networks:
