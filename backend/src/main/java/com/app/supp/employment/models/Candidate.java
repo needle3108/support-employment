@@ -9,52 +9,35 @@ import lombok.Setter;
     uniqueConstraints = {
       @UniqueConstraint(columnNames = "email")
     })
+@Getter
+@Setter
 public class Candidate {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Setter
-    @Getter
     private int id;
 
-    @Setter
-    @Getter
     private String email;
 
-    @Setter
-    @Getter
     private String firstName;
 
-    @Setter
-    @Getter
     private String lastName;
 
-    @Setter
-    @Getter
     private String password;
 
-    @Setter
-    @Getter
     private String phoneNumber;
 
-    @Setter
-    @Getter
     private String city;
 
-    @Setter
-    @Getter
     private String description;
 
-    @Setter
-    @Getter
     private String photoFilePath;
 
-    @Setter
-    @Getter
     private String profession;
 
-    @Setter
-    @Getter
     private int age;
+
+    @Column(nullable = false)
+    private String role;
 
     public Candidate() {}
 

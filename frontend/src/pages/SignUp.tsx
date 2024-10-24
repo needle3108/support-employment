@@ -3,20 +3,20 @@ import {Box, Button, TextField} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 
 export default function SignUp(){
-    const[email, setEmail] = useState("");
-    const[password, setPassword] = useState("");
-    const[firstName, setFirstName] = useState("");
-    const[lastName, setLastName] = useState("");
-    const[city, setCity] = useState("");
-    const[age, setAge] = useState(20);
-    const[description, setDescription] = useState("");
-    const[phoneNumber, setPhoneNumber] = useState("");
-    const[profession, setProfession] = useState("");
-    const[photoFilePath, setPhotoFilePath] = useState("");
+    const [email, setEmail] = useState("");
+    const [password, setPassword] = useState("");
+    const [firstName, setFirstName] = useState("");
+    const [lastName, setLastName] = useState("");
+    const [city, setCity] = useState("");
+    const [age, setAge] = useState(20);
+    const [description, setDescription] = useState("");
+    const [phoneNumber, setPhoneNumber] = useState("");
+    const [profession, setProfession] = useState("");
+    const [photoFilePath, setPhotoFilePath] = useState("");
 
     const navigate = useNavigate();
 
-    const handleRegister = async(event: React.FormEvent<HTMLFormElement>) => {
+    const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
         try {
             event.preventDefault();
             fetch("http://localhost:8080/auth/signup", {

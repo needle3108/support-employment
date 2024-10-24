@@ -14,6 +14,7 @@ CREATE TABLE IF NOT EXISTS candidate(
     photo_file_path VARCHAR(255) DEFAULT NULL,
     age INT NOT NULL,
     profession VARCHAR(255) NOT NULL,
+    role VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (id)
 );
@@ -23,10 +24,11 @@ CREATE TABLE IF NOT EXISTS company(
     email VARCHAR(255) NOT NULL,
     password VARCHAR(255) NOT NULL,
     name VARCHAR(255) NOT NULL,
-    lastName VARCHAR(255) NOT NULL,
+    last_name VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
-    companyName VARCHAR(255) NOT NULL,
+    company_name VARCHAR(255) NOT NULL,
     photo_file_path VARCHAR(255) DEFAULT NULL,
+    role VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (id)
 );

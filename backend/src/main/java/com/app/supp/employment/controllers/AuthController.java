@@ -1,11 +1,14 @@
 package com.app.supp.employment.controllers;
 
 import com.app.supp.employment.models.Candidate;
+import com.app.supp.employment.models.Company;
 import com.app.supp.employment.payload.request.LoginRequest;
+import com.app.supp.employment.payload.request.SignUpHRRequest;
 import com.app.supp.employment.payload.request.SignupRequest;
 import com.app.supp.employment.payload.response.JwtResponse;
 import com.app.supp.employment.payload.response.MessageResponse;
 import com.app.supp.employment.repository.CandidateRepository;
+import com.app.supp.employment.repository.CompanyRepository;
 import com.app.supp.employment.security.jwt.JwtUtils;
 import com.app.supp.employment.security.services.UserDetailsImpl;
 import jakarta.validation.Valid;
@@ -29,6 +32,9 @@ public class AuthController {
     CandidateRepository candidateRepository;
 
     @Autowired
+    CompanyRepository companyRepository;
+
+    @Autowired
     PasswordEncoder passwordEncoder;
 
     @Autowired
@@ -42,14 +48,13 @@ public class AuthController {
         SecurityContextHolder.getContext().setAuthentication(authentication);
         String jwt = jwtUtils.generateJwtToken(authentication);
 
-        System.out.println("Jestem");
-
         UserDetailsImpl userDetails = (UserDetailsImpl) authentication.getPrincipal();
 
         return ResponseEntity.ok(new JwtResponse(
                 jwt,
                 userDetails.getId(),
-                userDetails.getUsername()));
+                userDetails.getUsername(),
+                userDetails.getRole()));
     }
 
     @PostMapping("/signup")
@@ -72,7 +77,31 @@ public class AuthController {
                 signupRequest.getAge(),
                 signupRequest.getProfession());
 
+        candidate.setRole("USER");
         candidateRepository.save(candidate);
+
+        return ResponseEntity.ok(new MessageResponse("Successfully registered!"));
+    }
+
+    @PostMapping("/signupHR")
+    public ResponseEntity<?> registerCompany(@Valid @RequestBody SignUpHRRequest signUpHRRequest) {
+        if (companyRepository.existsByEmail(signUpHRRequest.getEmail())) {
+            return ResponseEntity
+                    .badRequest()
+                    .body(new MessageResponse("Error: Email is already in use!"));
+        }
+
+        Company company = new Company(
+                signUpHRRequest.getEmail(),
+                signUpHRRequest.getName(),
+                signUpHRRequest.getLastName(),
+                passwordEncoder.encode(signUpHRRequest.getPassword()),
+                signUpHRRequest.getCity(),
+                signUpHRRequest.getCompanyName(),
+                signUpHRRequest.getPhotoFilePath());
+
+        company.setRole("HR");
+        companyRepository.save(company);
 
         return ResponseEntity.ok(new MessageResponse("Successfully registered!"));
     }

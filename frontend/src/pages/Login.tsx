@@ -26,7 +26,12 @@ export default function Login(){
             }).then(data => {
                 if (data !== null) {
                     setAuthHeader(data["token"]);
-                    setTimeout(navigate, 0, "/profile", { replace: true });
+                    if (data["role"] === "USER"){
+                        setTimeout(navigate, 0, "/profile", { replace: true });
+                    }
+                    else{
+                        setTimeout(navigate, 0, "/profileHR", { replace: true });
+                    }
                 }
                 else {
                     setAuthHeader(null);

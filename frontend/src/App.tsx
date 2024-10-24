@@ -6,6 +6,8 @@ import {useEffect, useState} from "react";
 import {getAuthToken} from "./services/BackendService";
 import {jwtDecode} from "jwt-decode";
 import UserProfile from "./pages/UserProfile";
+import SignUpHR from "./pages/SignUpHR";
+import HRProfile from "./pages/HRProfile";
 
 
 export default function App(){
@@ -28,8 +30,10 @@ export default function App(){
             <Routes>
                 <Route path="/" element={<MainPage />}/>
                 <Route path="/signup" element={<SignUp />}/>
+                <Route path="/signupHR" element={<SignUpHR />}/>
                 <Route path="/login" element={<Login />}/>
                 <Route path="/profile" element={<UserProfile />}></Route>
+                <Route path="/profileHR" element={<HRProfile />}></Route>
             </Routes>
         </BrowserRouter>
     )

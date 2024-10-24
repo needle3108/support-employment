@@ -1,6 +1,7 @@
 package com.app.supp.employment.security.services;
 
 import com.app.supp.employment.models.Candidate;
+import com.app.supp.employment.models.Company;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.Getter;
 import org.springframework.security.core.GrantedAuthority;
@@ -22,17 +23,25 @@ public class UserDetailsImpl implements UserDetails {
     @JsonIgnore
     private String password;
 
+    @Getter
+    private final String role;
+
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(int id, String email, String password, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(int id, String email, String password, String role, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
+        this.role = role;
     }
 
     public static UserDetailsImpl build(Candidate candidate) {
-        return new UserDetailsImpl(candidate.getId(), candidate.getEmail(), candidate.getPassword(), null);
+        return new UserDetailsImpl(candidate.getId(), candidate.getEmail(), candidate.getPassword(), candidate.getRole(), null);
+    }
+
+    public static UserDetailsImpl build(Company company) {
+        return new UserDetailsImpl(company.getId(), company.getEmail(), company.getPassword(), company.getRole(), null);
     }
 
     @Override
