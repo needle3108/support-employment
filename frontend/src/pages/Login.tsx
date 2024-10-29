@@ -1,7 +1,36 @@
 import React, {useState} from "react";
 import {setAuthHeader} from "../services/BackendService";
-import {Box, Button, TextField} from "@mui/material";
+import {Box, Button, Card, TextField} from "@mui/material";
 import {useNavigate} from "react-router-dom";
+import NavbarSignUp from "../components/NavbarSignUp";
+
+const cardStyle = {
+    position: 'absolute',
+    top: '20%',
+    left: '30%',
+    right: '30%',
+    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+    textAlign: 'center',
+}
+
+const textFieldStyle = {
+    mt: '20px',
+    width: '300px'
+}
+
+const buttonStyle = {
+    margin: '0',
+    bgcolor: 'rgb(96,58,120)',
+    color: 'white',
+    borderRadius: '5px',
+    top: '30%',
+}
+
+const divStyle = {
+    height: '80px',
+    position: 'relative',
+    textAlign: 'center',
+}
 
 export default function Login(){
     const[email, setEmail] = useState("");
@@ -45,32 +74,38 @@ export default function Login(){
 
     return (
         <Box>
-            <form autoComplete="off" onSubmit={handleLogin}>
-                <h2>Logowanie</h2>
-                <TextField
-                    label="Email"
-                    onChange={e => setEmail(e.target.value)}
-                    required
-                    variant="outlined"
-                    color="secondary"
-                    type="email"
-                    sx={{mb: 3}}
-                    fullWidth
-                    value={email}
-                />
-                <TextField
-                    label="Hasło"
-                    onChange={e => setPassword(e.target.value)}
-                    required
-                    variant="outlined"
-                    color="secondary"
-                    type="password"
-                    sx={{mb: 3}}
-                    fullWidth
-                    value={password}
-                />
-                <Button type="submit" color="primary">Zaloguj się</Button>
-            </form>
+            <NavbarSignUp />
+            <Card sx={cardStyle}>
+                <form autoComplete="off" onSubmit={handleLogin}>
+                    <Box>
+                        <TextField
+                            label="Email"
+                            onChange={e => setEmail(e.target.value)}
+                            required
+                            variant="standard"
+                            color="secondary"
+                            type="email"
+                            sx={textFieldStyle}
+                            value={email}
+                        />
+                    </Box>
+                    <Box>
+                        <TextField
+                            label="Hasło"
+                            onChange={e => setPassword(e.target.value)}
+                            required
+                            variant="standard"
+                            color="secondary"
+                            type="password"
+                            sx={textFieldStyle}
+                            value={password}
+                        />
+                    </Box>
+                    <Box sx={divStyle} component="div">
+                        <Button type="submit" sx={buttonStyle}>Zaloguj się</Button>
+                    </Box>
+                </form>
+            </Card>
         </Box>
     );
 }

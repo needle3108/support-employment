@@ -1,5 +1,24 @@
 import {useState} from "react";
-import {Box, Button, Modal, Typography} from "@mui/material";
+import {Box, Button, Modal} from "@mui/material";
+
+const style= {
+    position: 'absolute',
+    top: '30%',
+    left: '50%',
+    bgcolor: 'white',
+    border: '1px solid rgb(96,58,120)',
+    boxShadow: 24,
+    p: 4,
+    transform: 'translate(-50%, -50%)',
+    borderRadius: '5px',
+}
+
+const buttonStyle = {
+    margin: '15px',
+    bgcolor: 'rgb(96,58,120)',
+    color: 'white',
+    borderRadius: '5px',
+}
 
 export default function ModalButtons(){
     const [open, setOpen] = useState(false);
@@ -8,19 +27,16 @@ export default function ModalButtons(){
 
     return (
         <Box>
-            <Button onClick={handleOpen}>Zarejestruj się</Button>
+            <Button onClick={handleOpen} color="inherit">Zarejestruj się</Button>
             <Modal
                 open={open}
                 onClose={handleClose}
                 aria-labelledby="modal-modal-title"
                 aria-describedby="modal-modal-description"
             >
-                <Box>
-                    <Typography id="modal-modal-title" variant="h6" component="h2">
-                        Rejesracja
-                    </Typography>
-                    <Button color="primary" href="/signup">Szukam pracy</Button>
-                    <Button color="primary" href="/signupHR">Szukam pracowników</Button>
+                <Box sx={style}>
+                    <Button color="primary" sx={buttonStyle} href="/signup">Szukam pracy</Button>
+                    <Button color="primary" sx={buttonStyle} href="/signupHR">Szukam pracowników</Button>
                 </Box>
             </Modal>
         </Box>

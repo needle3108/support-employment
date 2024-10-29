@@ -1,6 +1,36 @@
 import React, {useState} from "react";
-import {Box, Button, TextField} from "@mui/material";
+import {Box, Button, Card, TextField} from "@mui/material";
 import {useNavigate} from "react-router-dom";
+import NavbarSignUp from "../components/NavbarSignUp";
+
+const cardStyle = {
+    position: 'absolute',
+    top: '20%',
+    left: '30%',
+    right: '30%',
+    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+}
+
+const textFieldStyle = {
+    left: '10%',
+    mr: '20px',
+    mt: '20px',
+    width: '300px'
+}
+
+const buttonStyle = {
+    margin: '0',
+    bgcolor: 'rgb(96,58,120)',
+    color: 'white',
+    borderRadius: '5px',
+    top: '30%',
+}
+
+const divStyle = {
+    height: '80px',
+    position: 'relative',
+    textAlign: 'center',
+}
 
 export default function SignUp(){
     const [email, setEmail] = useState("");
@@ -56,119 +86,116 @@ export default function SignUp(){
 
         return (
             <Box>
-                <form autoComplete="off" onSubmit={handleRegister}>
-                    <h2>Rejestracja</h2>
-                    <TextField
-                        label="Email"
-                        onChange={e => setEmail(e.target.value)}
-                        required
-                        variant="outlined"
-                        color="secondary"
-                        type="email"
-                        sx={{mb: 3}}
-                        fullWidth
-                        value={email}
-                    />
-                    <TextField
-                        label="Hasło"
-                        onChange={e => setPassword(e.target.value)}
-                        required
-                        variant="outlined"
-                        color="secondary"
-                        type="password"
-                        sx={{mb: 3}}
-                        fullWidth
-                        value={password}
-                    />
-                    <TextField
-                        label="Imię"
-                        onChange={e => setFirstName(e.target.value)}
-                        required
-                        variant="outlined"
-                        color="secondary"
-                        type="text"
-                        sx={{mb: 3}}
-                        fullWidth
-                        value={firstName}
-                    />
-                    <TextField
-                        label="Nazwisko"
-                        onChange={e => setLastName(e.target.value)}
-                        required
-                        variant="outlined"
-                        color="secondary"
-                        type="text"
-                        sx={{mb: 3}}
-                        fullWidth
-                        value={lastName}
-                    />
-                    <TextField
-                        label="Miasto"
-                        onChange={e => setCity(e.target.value)}
-                        required
-                        variant="outlined"
-                        color="secondary"
-                        type="text"
-                        sx={{mb: 3}}
-                        fullWidth
-                        value={city}
-                    />
-                    <TextField
-                        label="Wiek"
-                        type="number"
-                        onChange={e => setAge(parseInt(e.target.value, 10))}
-                        required
-                        variant="outlined"
-                        color="secondary"
-                        sx={{mb: 3}}
-                        fullWidth
-                        value={age}
-                    />
-                    <TextField
-                        label="Numer kontaktowy"
-                        onChange={e => setPhoneNumber(e.target.value)}
-                        required
-                        variant="outlined"
-                        color="secondary"
-                        type="text"
-                        sx={{mb: 3}}
-                        fullWidth
-                        value={phoneNumber}
-                    />
-                    <TextField
-                        label="Profesja"
-                        onChange={e => setProfession(e.target.value)}
-                        required
-                        variant="outlined"
-                        color="secondary"
-                        type="text"
-                        sx={{mb: 3}}
-                        fullWidth
-                        value={profession}
-                    />
-                    <TextField
-                        label="Opis (możesz go edytować w dowolnym momencie)"
-                        onChange={e => setDescription(e.target.value)}
-                        variant="outlined"
-                        color="secondary"
-                        type="text"
-                        sx={{mb: 3}}
-                        fullWidth
-                        value={description}
-                    />
-                    <TextField
-                        label="Zdjęcie"
-                        onChange={e => setPhotoFilePath(e.target.value)}
-                        variant="outlined"
-                        color="secondary"
-                        type="text"
-                        sx={{mb: 3}}
-                        fullWidth
-                        placeholder="Uploading images feature is coming!"
-                        value={photoFilePath}
-                    />
-                    <Button type="submit" color="primary">Utwórz konto</Button>
-                </form>
+                <NavbarSignUp />
+                    <Card sx={cardStyle}>
+                        <form autoComplete="off" onSubmit={handleRegister}>
+                            <TextField
+                                label="Email"
+                                onChange={e => setEmail(e.target.value)}
+                                required
+                                variant="standard"
+                                color="secondary"
+                                type="email"
+                                sx={textFieldStyle}
+                                value={email}
+                            />
+                            <TextField
+                                label="Hasło"
+                                onChange={e => setPassword(e.target.value)}
+                                required
+                                variant="standard"
+                                color="secondary"
+                                type="password"
+                                sx={textFieldStyle}
+                                value={password}
+                            />
+                            <TextField
+                                label="Imię"
+                                onChange={e => setFirstName(e.target.value)}
+                                required
+                                variant="standard"
+                                color="secondary"
+                                type="text"
+                                sx={textFieldStyle}
+                                value={firstName}
+                            />
+                            <TextField
+                                label="Nazwisko"
+                                onChange={e => setLastName(e.target.value)}
+                                required
+                                variant="standard"
+                                color="secondary"
+                                type="text"
+                                sx={textFieldStyle}
+                                value={lastName}
+                            />
+                            <TextField
+                                label="Miasto"
+                                onChange={e => setCity(e.target.value)}
+                                required
+                                variant="standard"
+                                color="secondary"
+                                type="text"
+                                sx={textFieldStyle}
+                                value={city}
+                            />
+                            <TextField
+                                label="Wiek"
+                                type="number"
+                                onChange={e => setAge(parseInt(e.target.value, 10))}
+                                required
+                                variant="standard"
+                                color="secondary"
+                                sx={textFieldStyle}
+                                value={age}
+                            />
+                            <TextField
+                                label="Numer kontaktowy"
+                                onChange={e => setPhoneNumber(e.target.value)}
+                                required
+                                variant="standard"
+                                color="secondary"
+                                type="text"
+                                sx={textFieldStyle}
+                                value={phoneNumber}
+                            />
+                            <TextField
+                                label="Profesja"
+                                onChange={e => setProfession(e.target.value)}
+                                required
+                                variant="standard"
+                                color="secondary"
+                                type="text"
+                                sx={textFieldStyle}
+                                value={profession}
+                            />
+                            <TextField
+                                label="Opis"
+                                onChange={e => setDescription(e.target.value)}
+                                variant="standard"
+                                color="secondary"
+                                type="text"
+                                sx={textFieldStyle}
+                                value={description}
+                                helperText="Możesz go edytować w dowolnym momencie"
+                                multiline
+                                maxRows={8}
+                            />
+                            <TextField
+                                label="Zdjęcie"
+                                onChange={e => setPhotoFilePath(e.target.value)}
+                                variant="standard"
+                                color="secondary"
+                                type="text"
+                                sx={textFieldStyle}
+                                helperText="Uploading images feature is coming!"
+                                value={photoFilePath}
+                            />
+                            <Box sx={divStyle} component="div">
+                                <Button type="submit" sx={buttonStyle}>Utwórz konto</Button>
+                            </Box>
+                        </form>
+                    </Card>
             </Box>
         )
 }

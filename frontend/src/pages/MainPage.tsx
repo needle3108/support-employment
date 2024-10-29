@@ -1,11 +1,10 @@
-import {Box, Button} from "@mui/material";
-import ModalButtons from "../components/ModalButtons";
+import {Box} from "@mui/material";
+import Navbar from "../components/Navbar";
 
 export default function MainPage(){
     return (
         <Box>
-            <ModalButtons />
-            <Button href="/login">Zaloguj się</Button>
+            <Navbar />
         </Box>
     )
 }
