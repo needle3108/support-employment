@@ -1,11 +1,12 @@
 import React, {useState} from "react";
-import {Box, Button, Card, TextField} from "@mui/material";
+import {Avatar, Box, Button, Card, TextField} from "@mui/material";
 import {useNavigate} from "react-router-dom";
 import NavbarSignUp from "../components/NavbarSignUp";
+import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 
 const cardStyle = {
     position: 'absolute',
-    top: '20%',
+    top: '12%',
     left: '30%',
     right: '30%',
     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
@@ -32,6 +33,13 @@ const divStyle = {
     textAlign: 'center',
 }
 
+const avatarStyle = {
+    width: '230px',
+    height: '230px',
+    margin: 'auto',
+    mt: '10px'
+}
+
 export default function SignUp(){
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
@@ -44,7 +52,14 @@ export default function SignUp(){
     const [profession, setProfession] = useState("");
     const [photoFilePath, setPhotoFilePath] = useState("");
 
+    const [file, setFile] = useState("");
+
     const navigate = useNavigate();
+
+    const handleUploadPhoto = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!event.target.files) return;
+        setFile(URL.createObjectURL(event.target.files[0]));
+    }
 
     const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
         try {
@@ -89,6 +104,7 @@ export default function SignUp(){
                 <NavbarSignUp />
                     <Card sx={cardStyle}>
                         <form autoComplete="off" onSubmit={handleRegister}>
+                            { file && <Avatar sx={avatarStyle} src={file} alt={"../../public/logo512.png"}/>}
                             <TextField
                                 label="Email"
                                 onChange={e => setEmail(e.target.value)}
@@ -191,6 +207,16 @@ export default function SignUp(){
                                 helperText="Uploading images feature is coming!"
                                 value={photoFilePath}
                             />
+                            <Box sx={divStyle} component="div">
+                                <Button component="label" sx={buttonStyle}>
+                                    <AddAPhotoIcon />
+                                    <input
+                                        type="file"
+                                        hidden
+                                        onChange={handleUploadPhoto}
+                                    />
+                                </Button>
+                            </Box>
                             <Box sx={divStyle} component="div">
                                 <Button type="submit" sx={buttonStyle}>Utwórz konto</Button>
                             </Box>

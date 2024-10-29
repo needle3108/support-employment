@@ -1,5 +1,6 @@
 import {useState} from "react";
 import {Box, Button, Modal} from "@mui/material";
+import AppRegistrationIcon from '@mui/icons-material/AppRegistration';
 
 const style= {
     position: 'absolute',
@@ -27,7 +28,10 @@ export default function ModalButtons(){
 
     return (
         <Box>
-            <Button onClick={handleOpen} color="inherit">Zarejestruj się</Button>
+            <Button onClick={handleOpen} color="inherit">
+                Zarejestruj się
+                <AppRegistrationIcon sx={{ml: '10px'}}/>
+            </Button>
             <Modal
                 open={open}
                 onClose={handleClose}

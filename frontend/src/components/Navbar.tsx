@@ -1,5 +1,6 @@
 import {AppBar, Box, Button, createTheme, ThemeProvider, Toolbar, Typography} from "@mui/material";
 import ModalButtons from "./ModalButtons";
+import LoginIcon from '@mui/icons-material/Login';
 
 const theme = createTheme({
     palette: {
@@ -24,7 +25,10 @@ export default function Navbar(){
                             HireMe
                         </Typography>
                         <ModalButtons />
-                        <Button href="login" color="inherit">Zaloguj się</Button>
+                        <Button href="login" color="inherit">
+                            Zaloguj się
+                            <LoginIcon sx={{ml: '8px'}}/>
+                        </Button>
                     </Toolbar>
                 </AppBar>
             </Box>

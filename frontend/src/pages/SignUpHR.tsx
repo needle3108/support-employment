@@ -1,11 +1,12 @@
 import React, {useState} from "react";
 import {useNavigate} from "react-router-dom";
-import {Box, Button, Card, TextField} from "@mui/material";
+import {Avatar, Box, Button, Card, TextField} from "@mui/material";
 import NavbarSignUp from "../components/NavbarSignUp";
+import AddAPhotoIcon from "@mui/icons-material/AddAPhoto";
 
 const cardStyle = {
     position: 'absolute',
-    top: '20%',
+    top: '14%',
     left: '30%',
     right: '30%',
     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
@@ -19,7 +20,7 @@ const textFieldStyle = {
 }
 
 const buttonStyle = {
-    margin: '0',
+    margin: 'auto',
     bgcolor: 'rgb(96,58,120)',
     color: 'white',
     borderRadius: '5px',
@@ -27,9 +28,16 @@ const buttonStyle = {
 }
 
 const divStyle = {
-    height: '80px',
+    height: '60px',
     position: 'relative',
     textAlign: 'center',
+}
+
+const avatarStyle = {
+    width: '230px',
+    height: '230px',
+    margin: 'auto',
+    mt: '10px'
 }
 
 export default function SignUpHR(){
@@ -41,7 +49,14 @@ export default function SignUpHR(){
     const [companyName, setCompanyName] = useState("");
     const [photoFilePath, setPhotoFilePath] = useState("");
 
+    const [file, setFile] = useState("");
+
     const navigate = useNavigate();
+
+    const handleUploadPhoto = (event: React.ChangeEvent<HTMLInputElement>) => {
+        if (!event.target.files) return;
+        setFile(URL.createObjectURL(event.target.files[0]));
+    }
 
     const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
         try{
@@ -83,6 +98,7 @@ export default function SignUpHR(){
             <NavbarSignUp />
             <Card sx={cardStyle}>
                 <form autoComplete="off" onSubmit={handleRegister}>
+                    { file && <Avatar sx={avatarStyle} src={file} alt={"../../public/logo512.png"}/>}
                     <TextField
                         label="Email"
                         onChange={e => setEmail(e.target.value)}
@@ -153,6 +169,16 @@ export default function SignUpHR(){
                         placeholder="Uploading images feature is coming!"
                         value={photoFilePath}
                     />
+                    <Box sx={divStyle} component="div">
+                        <Button component="label" sx={buttonStyle}>
+                            <AddAPhotoIcon />
+                            <input
+                                type="file"
+                                hidden
+                                onChange={handleUploadPhoto}
+                            />
+                        </Button>
+                    </Box>
                     <Box sx={divStyle} component="div">
                         <Button type="submit" sx={buttonStyle}>Utwórz konto</Button>
                     </Box>

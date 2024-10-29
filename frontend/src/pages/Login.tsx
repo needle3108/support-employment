@@ -7,15 +7,15 @@ import NavbarSignUp from "../components/NavbarSignUp";
 const cardStyle = {
     position: 'absolute',
     top: '20%',
-    left: '30%',
-    right: '30%',
+    left: '33%',
+    right: '33%',
     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
     textAlign: 'center',
 }
 
 const textFieldStyle = {
     mt: '20px',
-    width: '300px'
+    width: '80%'
 }
 
 const buttonStyle = {

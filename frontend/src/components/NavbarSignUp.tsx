@@ -30,8 +30,8 @@ export default function NavbarSignUp(){
                         <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontFamily: "Lucida Handwriting"}} fontStyle="inherit">
                             HireMe
                         </Typography>
-                        <IconButton>
-                            <HomeIcon onClick={home}/>
+                        <IconButton onClick={home}>
+                            <HomeIcon/>
                         </IconButton>
                     </Toolbar>
                 </AppBar>
