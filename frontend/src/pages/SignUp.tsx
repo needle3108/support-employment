@@ -50,35 +50,43 @@ export default function SignUp(){
     const [description, setDescription] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [profession, setProfession] = useState("");
-    const [photoFilePath, setPhotoFilePath] = useState("");
+    const [file, setFile] = useState<File | undefined>();
 
-    const [file, setFile] = useState("");
+    const [preview, setPreview] = useState("");
 
     const navigate = useNavigate();
 
-    const handleUploadPhoto = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!event.target.files) return;
-        setFile(URL.createObjectURL(event.target.files[0]));
+    const handleUploadPhoto = (event: React.FormEvent<HTMLInputElement>) => {
+        const target = event.target as HTMLInputElement & {
+            files: FileList;
+        }
+
+        setFile(target.files[0]);
+        setPreview(URL.createObjectURL(target.files[0]));
     }
 
     const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
         try {
             event.preventDefault();
+
+            if (typeof file === 'undefined') return;
+
+            const formData = new FormData();
+
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('firstName', firstName);
+            formData.append('lastName', lastName);
+            formData.append('city', city);
+            formData.append('age', age.toString());
+            formData.append('description', description);
+            formData.append('phoneNumber', phoneNumber);
+            formData.append('profession', profession);
+            formData.append('file', file);
+
             fetch("http://localhost:8080/auth/signup", {
                 method: "POST",
-                headers: {"content-type": "application/json"},
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                    firstName: firstName,
-                    lastName: lastName,
-                    city: city,
-                    age: age,
-                    description: description,
-                    phoneNumber: phoneNumber,
-                    profession: profession,
-                    photoFilePath: photoFilePath
-                })
+                body: formData
             }).then(response => {
                 if (response.status == 200) {
                     return response.json();
@@ -104,7 +112,7 @@ export default function SignUp(){
                 <NavbarSignUp />
                     <Card sx={cardStyle}>
                         <form autoComplete="off" onSubmit={handleRegister}>
-                            { file && <Avatar sx={avatarStyle} src={file} alt={"../../public/logo512.png"}/>}
+                            { file && <Avatar sx={avatarStyle} src={preview} alt={"../../public/logo512.png"}/>}
                             <TextField
                                 label="Email"
                                 onChange={e => setEmail(e.target.value)}
@@ -197,22 +205,14 @@ export default function SignUp(){
                                 multiline
                                 maxRows={8}
                             />
-                            <TextField
-                                label="Zdjęcie"
-                                onChange={e => setPhotoFilePath(e.target.value)}
-                                variant="standard"
-                                color="secondary"
-                                type="text"
-                                sx={textFieldStyle}
-                                helperText="Uploading images feature is coming!"
-                                value={photoFilePath}
-                            />
                             <Box sx={divStyle} component="div">
                                 <Button component="label" sx={buttonStyle}>
                                     <AddAPhotoIcon />
                                     <input
                                         type="file"
                                         hidden
+                                        id="image"
+                                        name="image"
                                         onChange={handleUploadPhoto}
                                     />
                                 </Button>

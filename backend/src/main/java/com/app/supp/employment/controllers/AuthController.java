@@ -13,6 +13,7 @@ import com.app.supp.employment.security.jwt.JwtUtils;
 import com.app.supp.employment.security.services.UserDetailsImpl;
 import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -20,6 +21,9 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
+
+import java.io.File;
+import java.io.IOException;
 
 @CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
@@ -40,6 +44,8 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
+    private static final String UPLOAD_PATH = "/data/upload_tmp/";
+
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
         Authentication authentication = authenticationManager.authenticate(
@@ -58,51 +64,71 @@ public class AuthController {
     }
 
     @PostMapping("/signup")
-    public ResponseEntity<?> registerUser(@Valid @RequestBody SignupRequest signupRequest) {
+    public ResponseEntity<?> registerUser(@ModelAttribute SignupRequest signupRequest) {
         if (candidateRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        Candidate candidate = new Candidate(
-                signupRequest.getEmail(),
-                signupRequest.getFirstName(),
-                signupRequest.getLastName(),
-                passwordEncoder.encode(signupRequest.getPassword()),
-                signupRequest.getPhoneNumber(),
-                signupRequest.getCity(),
-                signupRequest.getDescription(),
-                signupRequest.getPhotoFilePath(),
-                signupRequest.getAge(),
-                signupRequest.getProfession());
+        String fileName = signupRequest.getFile().getOriginalFilename();
 
-        candidate.setRole("USER");
-        candidateRepository.save(candidate);
+        try{
+            signupRequest.getFile().transferTo(new File(UPLOAD_PATH + fileName));
 
-        return ResponseEntity.ok(new MessageResponse("Successfully registered!"));
+            Candidate candidate = new Candidate(
+                    signupRequest.getEmail(),
+                    signupRequest.getFirstName(),
+                    signupRequest.getLastName(),
+                    passwordEncoder.encode(signupRequest.getPassword()),
+                    signupRequest.getPhoneNumber(),
+                    signupRequest.getCity(),
+                    signupRequest.getDescription(),
+                    fileName,
+                    Integer.parseInt(signupRequest.getAge()),
+                    signupRequest.getProfession());
+
+            candidate.setRole("USER");
+            candidateRepository.save(candidate);
+
+            return ResponseEntity.ok(new MessageResponse("Successfully registered!"));
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 
     @PostMapping("/signupHR")
-    public ResponseEntity<?> registerCompany(@Valid @RequestBody SignUpHRRequest signUpHRRequest) {
+    public ResponseEntity<?> registerCompany(@ModelAttribute SignUpHRRequest signUpHRRequest) {
         if (companyRepository.existsByEmail(signUpHRRequest.getEmail())) {
             return ResponseEntity
                     .badRequest()
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        Company company = new Company(
-                signUpHRRequest.getEmail(),
-                signUpHRRequest.getName(),
-                signUpHRRequest.getLastName(),
-                passwordEncoder.encode(signUpHRRequest.getPassword()),
-                signUpHRRequest.getCity(),
-                signUpHRRequest.getCompanyName(),
-                signUpHRRequest.getPhotoFilePath());
+        String fileName = signUpHRRequest.getFile().getOriginalFilename();
 
-        company.setRole("HR");
-        companyRepository.save(company);
 
-        return ResponseEntity.ok(new MessageResponse("Successfully registered!"));
+        try{
+            signUpHRRequest.getFile().transferTo(new File(UPLOAD_PATH + fileName));
+            Company company = new Company(
+                    signUpHRRequest.getEmail(),
+                    signUpHRRequest.getName(),
+                    signUpHRRequest.getLastName(),
+                    passwordEncoder.encode(signUpHRRequest.getPassword()),
+                    signUpHRRequest.getCity(),
+                    signUpHRRequest.getCompanyName(),
+                    fileName);
+
+            company.setRole("HR");
+            companyRepository.save(company);
+
+            return ResponseEntity.ok(new MessageResponse("Successfully registered!"));
+        }
+        catch(IOException e){
+            System.out.println(e.getMessage());
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
     }
 }

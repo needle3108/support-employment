@@ -47,32 +47,40 @@ export default function SignUpHR(){
     const [lastName, setLastName] = useState("");
     const [city, setCity] = useState("");
     const [companyName, setCompanyName] = useState("");
-    const [photoFilePath, setPhotoFilePath] = useState("");
+    const [file, setFile] = useState<File | undefined>();
 
-    const [file, setFile] = useState("");
+    const [preview, setPreview] = useState("");
 
     const navigate = useNavigate();
 
-    const handleUploadPhoto = (event: React.ChangeEvent<HTMLInputElement>) => {
-        if (!event.target.files) return;
-        setFile(URL.createObjectURL(event.target.files[0]));
+    const handleUploadPhoto = (event: React.FormEvent<HTMLInputElement>) => {
+        const target = event.target as HTMLInputElement & {
+            files: FileList;
+        }
+
+        setFile(target.files[0]);
+        setPreview(URL.createObjectURL(target.files[0]));
     }
 
     const handleRegister = (event: React.FormEvent<HTMLFormElement>) => {
         try{
             event.preventDefault();
+
+            if (typeof file === 'undefined') return;
+
+            const formData = new FormData();
+
+            formData.append('email', email);
+            formData.append('password', password);
+            formData.append('name', name);
+            formData.append('lastName', lastName);
+            formData.append('city', city);
+            formData.append('companyName', companyName);
+            formData.append('file', file);
+
             fetch("http://localhost:8080/auth/signupHR", {
                 method: "POST",
-                headers: {"content-type": "application/json"},
-                body: JSON.stringify({
-                    email: email,
-                    password: password,
-                    name: name,
-                    lastName: lastName,
-                    city: city,
-                    companyName: companyName,
-                    photoFilePath: photoFilePath
-                })
+                body: formData
             }).then(response => {
                 if (response.status == 200) {
                     return response.json();
@@ -98,7 +106,7 @@ export default function SignUpHR(){
             <NavbarSignUp />
             <Card sx={cardStyle}>
                 <form autoComplete="off" onSubmit={handleRegister}>
-                    { file && <Avatar sx={avatarStyle} src={file} alt={"../../public/logo512.png"}/>}
+                    { file && <Avatar sx={avatarStyle} src={preview} alt={"../../public/logo512.png"}/>}
                     <TextField
                         label="Email"
                         onChange={e => setEmail(e.target.value)}
@@ -159,22 +167,14 @@ export default function SignUpHR(){
                         sx={textFieldStyle}
                         value={companyName}
                     />
-                    <TextField
-                        label="Zdjęcie"
-                        onChange={e => setPhotoFilePath(e.target.value)}
-                        variant="standard"
-                        color="secondary"
-                        type="text"
-                        sx={textFieldStyle}
-                        placeholder="Uploading images feature is coming!"
-                        value={photoFilePath}
-                    />
                     <Box sx={divStyle} component="div">
                         <Button component="label" sx={buttonStyle}>
                             <AddAPhotoIcon />
                             <input
                                 type="file"
                                 hidden
+                                id="image"
+                                name="image"
                                 onChange={handleUploadPhoto}
                             />
                         </Button>

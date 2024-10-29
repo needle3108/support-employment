@@ -4,10 +4,13 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.Serializable;
 
 @Getter
 @Setter
-public class SignUpHRRequest {
+public class SignUpHRRequest implements Serializable {
     @NotBlank
     @Email
     private String email;
@@ -27,5 +30,5 @@ public class SignUpHRRequest {
     @NotBlank
     private String companyName;
 
-    private String photoFilePath;
+    private MultipartFile file;
 }

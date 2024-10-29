@@ -4,10 +4,14 @@ import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.Setter;
+import org.springframework.web.multipart.MultipartFile;
+
+import java.io.File;
+import java.io.Serializable;
 
 @Getter
 @Setter
-public class SignupRequest {
+public class SignupRequest implements Serializable {
     @NotBlank
     @Email
     private String email;
@@ -24,7 +28,7 @@ public class SignupRequest {
     @NotBlank
     private String city;
 
-    private int age;
+    private String age;
 
     private String description;
 
@@ -34,5 +38,5 @@ public class SignupRequest {
     @NotBlank
     private String profession;
 
-    private String photoFilePath;
+    private MultipartFile file;
 }
