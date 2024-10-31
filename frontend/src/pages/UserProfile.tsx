@@ -1,18 +1,39 @@
-import {useNavigate} from "react-router-dom";
-import {setAuthHeader} from "../services/BackendService";
-import {Box, Button} from "@mui/material";
+import {Box} from "@mui/material";
+import UserNavbar from "../components/UserNavbar";
+import {useEffect, useState} from "react";
+import {getAuthToken} from "../services/BackendService";
 
 export default function UserProfile() {
-    const navigate = useNavigate();
+    const[firstName, setFirstName] = useState("");
 
-    const handleLogout= () => {
-        setAuthHeader(null);
-        navigate("/");
-    }
+    useEffect(() => {
+        try{
+             fetch("http://localhost:8080/user/profile", {
+                method: "GET",
+                headers: {'Authorization': `Bearer ${getAuthToken()}`},
+            }).then(response => {
+                if(response.status === 200){
+                    return response.json();
+                }
+                else{
+                    return null;
+                }
+            }).then(data => {
+                if (data !== null) {
+                    setFirstName(data["firstName"]);
+                }
+            })
+        } catch (error) {
+            console.error("Błąd pobierania danych: ", error);
+        }
+    }, [])
 
     return (
         <Box>
-            <Button onClick={handleLogout}>Wyloguj się</Button>
+            <UserNavbar />
+            <Box>
+                <span>{firstName}</span>
+            </Box>
         </Box>
     )
 }

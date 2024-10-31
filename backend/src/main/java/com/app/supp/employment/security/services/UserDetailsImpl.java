@@ -18,6 +18,7 @@ public class UserDetailsImpl implements UserDetails {
     @Getter
     private int id;
 
+    @Getter
     private final String email;
 
     @JsonIgnore
@@ -26,22 +27,56 @@ public class UserDetailsImpl implements UserDetails {
     @Getter
     private final String role;
 
+    @Getter
+    private String firstName;
+
+    @Getter
+    private String lastName;
+
+    @Getter
+    private String phoneNumber;
+
+    @Getter
+    private String description;
+
+    @Getter
+    private String profession;
+
+    @Getter
+    private String photoFilePath;
+
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(int id, String email, String password, String role, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(int id, String email, String password, String role, String firstName, String lastName, String phoneNumber, String description, String profession, String photoFilePath, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
         this.authorities = authorities;
         this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.phoneNumber = phoneNumber;
+        this.description = description;
+        this.profession = profession;
+        this.photoFilePath = photoFilePath;
+    }
+
+    public UserDetailsImpl(int id, String email, String password, String role, String firstName, String lastName, Collection<? extends GrantedAuthority> authorities) {
+        this.id = id;
+        this.email = email;
+        this.password = password;
+        this.authorities = authorities;
+        this.role = role;
+        this.firstName = firstName;
+        this.lastName = lastName;
     }
 
     public static UserDetailsImpl build(Candidate candidate) {
-        return new UserDetailsImpl(candidate.getId(), candidate.getEmail(), candidate.getPassword(), candidate.getRole(), null);
+        return new UserDetailsImpl(candidate.getId(), candidate.getEmail(), candidate.getPassword(), candidate.getRole(), candidate.getFirstName(), candidate.getLastName(), candidate.getPhoneNumber(), candidate.getDescription(), candidate.getProfession(), candidate.getPhotoFilePath(), null);
     }
 
     public static UserDetailsImpl build(Company company) {
-        return new UserDetailsImpl(company.getId(), company.getEmail(), company.getPassword(), company.getRole(), null);
+        return new UserDetailsImpl(company.getId(), company.getEmail(), company.getPassword(), company.getRole(), company.getName(), company.getLastName(), null);
     }
 
     @Override

@@ -41,12 +41,12 @@ export default function Login(){
     const handleLogin = async(event: React.FormEvent<HTMLFormElement>) => {
         try{
             event.preventDefault();
-            fetch("http://localhost:8080/auth/signin", {
+            await fetch("http://localhost:8080/auth/signin", {
                 method: "POST",
                 headers: {"content-type": "application/json"},
                 body: JSON.stringify({email: email, password: password})
             }).then(response => {
-                if (response.status == 200) {
+                if (response.status === 200) {
                     return response.json();
                 }
                 else {

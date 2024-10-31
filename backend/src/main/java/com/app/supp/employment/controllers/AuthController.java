@@ -25,9 +25,9 @@ import org.springframework.web.bind.annotation.*;
 import java.io.File;
 import java.io.IOException;
 
-@CrossOrigin(origins = "*", maxAge = 3600)
 @RestController
 @RequestMapping("/auth")
+@CrossOrigin
 public class AuthController {
     @Autowired
     AuthenticationManager authenticationManager;
@@ -44,7 +44,7 @@ public class AuthController {
     @Autowired
     JwtUtils jwtUtils;
 
-    private static final String UPLOAD_PATH = "/data/upload_tmp/";
+    private static final String UPLOAD_PATH = "/usr/app/application/images/";
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
