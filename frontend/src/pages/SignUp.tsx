@@ -69,8 +69,6 @@ export default function SignUp(){
         try {
             event.preventDefault();
 
-            if (typeof file === 'undefined') return;
-
             const formData = new FormData();
 
             formData.append('email', email);
@@ -82,7 +80,13 @@ export default function SignUp(){
             formData.append('description', description);
             formData.append('phoneNumber', phoneNumber);
             formData.append('profession', profession);
-            formData.append('file', file);
+
+            if (typeof file === 'undefined'){
+                formData.append('file', "");
+            }
+            else{
+                formData.append('file', file);
+            }
 
             fetch("http://localhost:8080/auth/signup", {
                 method: "POST",

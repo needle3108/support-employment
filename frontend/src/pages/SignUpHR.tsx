@@ -66,8 +66,6 @@ export default function SignUpHR(){
         try{
             event.preventDefault();
 
-            if (typeof file === 'undefined') return;
-
             const formData = new FormData();
 
             formData.append('email', email);
@@ -76,7 +74,13 @@ export default function SignUpHR(){
             formData.append('lastName', lastName);
             formData.append('city', city);
             formData.append('companyName', companyName);
-            formData.append('file', file);
+
+            if (typeof file === 'undefined'){
+                formData.append('file', "");
+            }
+            else{
+                formData.append('file', file);
+            }
 
             fetch("http://localhost:8080/auth/signupHR", {
                 method: "POST",

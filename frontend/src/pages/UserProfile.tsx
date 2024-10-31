@@ -8,7 +8,7 @@ export default function UserProfile() {
 
     useEffect(() => {
         try{
-             fetch("http://localhost:8080/user/profile", {
+            fetch("http://localhost:8080/user/profile", {
                 method: "GET",
                 headers: {'Authorization': `Bearer ${getAuthToken()}`},
             }).then(response => {

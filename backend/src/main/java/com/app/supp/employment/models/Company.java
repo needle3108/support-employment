@@ -28,14 +28,16 @@ public class Company {
 
     private String companyName;
 
-    private String photoFilePath;
+    @Lob
+    @Column(name = "photo_file_path", columnDefinition = "LONGBLOB")
+    private byte[] photoFilePath;
 
     @Column(nullable = false)
     private String role;
 
     public Company() {}
 
-    public Company(String email, String name, String lastName, String password, String city, String companyName, String photoFilePath) {
+    public Company(String email, String name, String lastName, String password, String city, String companyName, byte[] photoFilePath) {
         this.email = email;
         this.name = name;
         this.lastName = lastName;

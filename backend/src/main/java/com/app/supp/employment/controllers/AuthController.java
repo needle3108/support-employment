@@ -22,7 +22,6 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.web.bind.annotation.*;
 
-import java.io.File;
 import java.io.IOException;
 
 @RestController
@@ -43,8 +42,6 @@ public class AuthController {
 
     @Autowired
     JwtUtils jwtUtils;
-
-    private static final String UPLOAD_PATH = "/usr/app/application/images/";
 
     @PostMapping("/signin")
     public ResponseEntity<?> authenticateUser(@Valid @RequestBody LoginRequest loginRequest) {
@@ -71,11 +68,7 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        String fileName = signupRequest.getFile().getOriginalFilename();
-
         try{
-            signupRequest.getFile().transferTo(new File(UPLOAD_PATH + fileName));
-
             Candidate candidate = new Candidate(
                     signupRequest.getEmail(),
                     signupRequest.getFirstName(),
@@ -84,7 +77,7 @@ public class AuthController {
                     signupRequest.getPhoneNumber(),
                     signupRequest.getCity(),
                     signupRequest.getDescription(),
-                    fileName,
+                    signupRequest.getFile().getBytes(),
                     Integer.parseInt(signupRequest.getAge()),
                     signupRequest.getProfession());
 
@@ -107,11 +100,7 @@ public class AuthController {
                     .body(new MessageResponse("Error: Email is already in use!"));
         }
 
-        String fileName = signUpHRRequest.getFile().getOriginalFilename();
-
-
         try{
-            signUpHRRequest.getFile().transferTo(new File(UPLOAD_PATH + fileName));
             Company company = new Company(
                     signUpHRRequest.getEmail(),
                     signUpHRRequest.getName(),
@@ -119,7 +108,7 @@ public class AuthController {
                     passwordEncoder.encode(signUpHRRequest.getPassword()),
                     signUpHRRequest.getCity(),
                     signUpHRRequest.getCompanyName(),
-                    fileName);
+                    signUpHRRequest.getFile().getBytes());
 
             company.setRole("HR");
             companyRepository.save(company);

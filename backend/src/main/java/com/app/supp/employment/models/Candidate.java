@@ -3,6 +3,9 @@ package com.app.supp.employment.models;
 import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
+import org.hibernate.annotations.Type;
+
+import java.sql.Blob;
 
 @Entity
 @Table(name = "Candidate",
@@ -30,7 +33,9 @@ public class Candidate {
 
     private String description;
 
-    private String photoFilePath;
+    @Lob
+    @Column(name = "photo_file_path", columnDefinition = "LONGBLOB")
+    private byte[] photoFilePath;
 
     private String profession;
 
@@ -41,7 +46,7 @@ public class Candidate {
 
     public Candidate() {}
 
-    public Candidate(String email, String firstName, String lastName, String password, String phoneNumber, String city, String description, String photoFilePath, int age, String profession) {
+    public Candidate(String email, String firstName, String lastName, String password, String phoneNumber, String city, String description, byte[] photoFilePath, int age, String profession) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
