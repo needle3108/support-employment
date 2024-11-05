@@ -29,7 +29,7 @@ public class Company {
     private String companyName;
 
     @Lob
-    @Column(name = "photo_file_path", columnDefinition = "LONGBLOB")
+    @Column(name = "photo_file_path", columnDefinition = "MEDIUMBLOB")
     private byte[] photoFilePath;
 
     @Column(nullable = false)

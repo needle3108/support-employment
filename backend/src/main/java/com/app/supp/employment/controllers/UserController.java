@@ -17,17 +17,30 @@ public class UserController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
 
-            return ResponseEntity.ok(new UserProfileResponse(
+            return ResponseEntity.ok()
+                    .body(new UserProfileResponse(
                     currentUser.getFirstName(),
                     currentUser.getLastName(),
                     currentUser.getPhoneNumber(),
                     currentUser.getEmail(),
                     currentUser.getDescription(),
                     currentUser.getProfession()
-            ));
+                    ));
         } catch (Exception e){
             return ResponseEntity.notFound().build();
         }
+    }
 
+    @GetMapping("/image")
+    public ResponseEntity<?> getImage(){
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            return ResponseEntity.ok()
+                    .body(currentUser.getPhotoFilePath());
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
     }
 }

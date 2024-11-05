@@ -42,9 +42,12 @@ public class UserDetailsImpl implements UserDetails {
     @Getter
     private String profession;
 
+    @Getter
+    private byte[] photoFilePath;
+
     private final Collection<? extends GrantedAuthority> authorities;
 
-    public UserDetailsImpl(int id, String email, String password, String role, String firstName, String lastName, String phoneNumber, String description, String profession, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(int id, String email, String password, String role, String firstName, String lastName, String phoneNumber, String description, String profession, byte[] photoFilePath, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -55,6 +58,7 @@ public class UserDetailsImpl implements UserDetails {
         this.phoneNumber = phoneNumber;
         this.description = description;
         this.profession = profession;
+        this.photoFilePath = photoFilePath;
     }
 
     public UserDetailsImpl(int id, String email, String password, String role, String firstName, String lastName, Collection<? extends GrantedAuthority> authorities) {
@@ -68,7 +72,7 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(Candidate candidate) {
-        return new UserDetailsImpl(candidate.getId(), candidate.getEmail(), candidate.getPassword(), candidate.getRole(), candidate.getFirstName(), candidate.getLastName(), candidate.getPhoneNumber(), candidate.getDescription(), candidate.getProfession(), null);
+        return new UserDetailsImpl(candidate.getId(), candidate.getEmail(), candidate.getPassword(), candidate.getRole(), candidate.getFirstName(), candidate.getLastName(), candidate.getPhoneNumber(), candidate.getDescription(), candidate.getProfession(), candidate.getPhotoFilePath(),null);
     }
 
     public static UserDetailsImpl build(Company company) {

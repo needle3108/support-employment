@@ -34,7 +34,7 @@ public class Candidate {
     private String description;
 
     @Lob
-    @Column(name = "photo_file_path", columnDefinition = "LONGBLOB")
+    @Column(name = "photo_file_path", columnDefinition = "MEDIUMBLOB")
     private byte[] photoFilePath;
 
     private String profession;

@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS candidate(
     phone_number INT DEFAULT NULL,
     city VARCHAR(255) NOT NULL,
     description VARCHAR(2000) DEFAULT NULL,
-    photo_file_path LONGBLOB DEFAULT NULL,
+    photo_file_path MEDIUMBLOB DEFAULT NULL,
     age INT NOT NULL,
     profession VARCHAR(255) NOT NULL,
     role VARCHAR(255) NOT NULL,
@@ -27,7 +27,7 @@ CREATE TABLE IF NOT EXISTS company(
     last_name VARCHAR(255) NOT NULL,
     city VARCHAR(255) NOT NULL,
     company_name VARCHAR(255) NOT NULL,
-    photo_file_path LONGBLOB DEFAULT NULL,
+    photo_file_path MEDIUMBLOB DEFAULT NULL,
     role VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (id)
