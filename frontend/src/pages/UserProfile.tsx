@@ -51,22 +51,7 @@ export default function UserProfile() {
                     setPhoneNumber(data["phoneNumber"]);
                     setDescription(data["description"]);
                     setProfession(data["profession"]);
-                }
-            })
-
-            fetch("http://localhost:8080/user/image", {
-                method: "GET",
-                headers: {'Authorization': `Bearer ${getAuthToken()}`},
-            }).then(res => {
-                if(res.status === 200){
-                    return res.blob();
-                }
-                else{
-                    return null;
-                }
-            }).then(d => {
-                if (d !== null){
-                    setFile(URL.createObjectURL(d));
+                    setFile(data["photoFilePath"])
                 }
             })
 
@@ -80,7 +65,7 @@ export default function UserProfile() {
             <UserNavbar />
             <Box>
                 <Card sx={cardStyle}>
-                    <Avatar src={file} sx={avatarStyle}></Avatar>
+                    <Avatar src={"data:image/png;base64,"+file} sx={avatarStyle}></Avatar>
                     <label>Imię: </label>
                     <Typography variant="subtitle1" sx={typographyStyle}>{firstName}</Typography>
                     <label>Imię: </label>
