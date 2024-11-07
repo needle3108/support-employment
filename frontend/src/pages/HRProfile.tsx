@@ -1,7 +1,8 @@
-import {Avatar, Box, Card, CardActionArea, CardContent, Typography} from "@mui/material";
+import {Avatar, Box, ButtonBase, Card, CardContent, Typography} from "@mui/material";
 import UserNavbar from "../components/UserNavbar";
-import {useEffect, useState} from "react";
+import React, {useEffect, useState} from "react";
 import {getAuthToken} from "../services/BackendService";
+import {useNavigate} from "react-router-dom";
 
 const cardStyle = {
     position: 'relative',
@@ -22,6 +23,8 @@ const avatarStyle = {
 
 export default function HRProfile(){
     const[candidates, setCandidates] = useState([]);
+
+    const navigate = useNavigate();
 
     useEffect(() => {
         try{
@@ -47,6 +50,33 @@ export default function HRProfile(){
         }
     },[])
 
+    const getCandidate = (id: string) => {
+        try{
+            const formData = new FormData();
+
+            formData.append('id', id);
+
+            fetch("http://localhost:8080/userHR/getCandidate", {
+                method: "POST",
+                headers: {'Authorization': `Bearer ${getAuthToken()}`},
+                body: formData
+            }).then(response => {
+                if (response.status == 200) {
+                    return response.json();
+                }
+                else {
+                    return null;
+                }
+            }).then(data => {
+                if (data !== null){
+                    navigate("/candidate", {state: data});
+                }
+            })
+        }
+        catch (error) {
+            console.error("Błąd pobierania danych: ", error);
+        }
+    }
 
     return (
         <Box>
@@ -55,7 +85,7 @@ export default function HRProfile(){
             {
                  candidates.map(candidate => (
                      <Card key={candidate["id"]} sx={cardStyle}>
-                         <CardActionArea>
+                         <ButtonBase onClick={() => getCandidate(candidate["id"])}>
                              <CardContent>
                                  <Typography>
                                  </Typography>
@@ -70,7 +100,7 @@ export default function HRProfile(){
                                      {candidate["city"]}
                                  </Typography>
                              </CardContent>
-                         </CardActionArea>
+                        </ButtonBase>
                      </Card>
                 ))
             }

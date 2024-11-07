@@ -7,5 +7,7 @@ public interface CandidateRepository extends JpaRepository<Candidate, Integer> {
     Candidate findByEmail(String email);
 
     Boolean existsByEmail(String email);
+
+    Candidate findById(int id);
 }
 

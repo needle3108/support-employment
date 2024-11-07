@@ -68,8 +68,6 @@ export default function UserProfile() {
                     <Avatar src={"data:image/png;base64,"+file} sx={avatarStyle}></Avatar>
                     <label>Imię: </label>
                     <Typography variant="subtitle1" sx={typographyStyle}>{firstName}</Typography>
-                    <label>Imię: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{firstName}</Typography>
                     <label>Nazwisko: </label>
                     <Typography variant="subtitle1" sx={typographyStyle}>{lastName}</Typography>
                     <label>Email: </label>

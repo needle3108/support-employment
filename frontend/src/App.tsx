@@ -8,6 +8,7 @@ import {jwtDecode} from "jwt-decode";
 import UserProfile from "./pages/UserProfile";
 import SignUpHR from "./pages/SignUpHR";
 import HRProfile from "./pages/HRProfile";
+import Candidate from "./pages/Candidate";
 
 
 export default function App(){
@@ -34,6 +35,7 @@ export default function App(){
                 <Route path="/login" element={<Login />}/>
                 <Route path="/profile" element={<UserProfile />}></Route>
                 <Route path="/profileHR" element={<HRProfile />}></Route>
+                <Route path="/candidate" element={<Candidate />}/>
             </Routes>
         </BrowserRouter>
     )
