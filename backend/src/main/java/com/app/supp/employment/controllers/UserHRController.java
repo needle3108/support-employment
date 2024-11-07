@@ -1,7 +1,9 @@
 package com.app.supp.employment.controllers;
 
 import com.app.supp.employment.models.Candidate;
+import com.app.supp.employment.models.Company;
 import com.app.supp.employment.repository.CandidateRepository;
+import com.app.supp.employment.repository.CompanyRepository;
 import com.app.supp.employment.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -11,6 +13,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @RestController
 @RequestMapping("/userHR")
@@ -18,6 +21,9 @@ import java.util.List;
 public class UserHRController {
     @Autowired
     private CandidateRepository candidateRepository;
+
+    @Autowired
+    private CompanyRepository companyRepository;
 
     @GetMapping("/getCandidates")
     public ResponseEntity<List<Candidate>> getCandidates() {
@@ -44,6 +50,21 @@ public class UserHRController {
 
             return ResponseEntity.ok()
                     .body(candidate);
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getImage")
+    public ResponseEntity<?> getImage(){
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            Optional<Company> company = companyRepository.findByEmail(currentUser.getEmail());
+
+            return ResponseEntity.ok()
+                    .body(company);
         } catch (Exception e){
             return ResponseEntity.notFound().build();
         }

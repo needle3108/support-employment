@@ -1,8 +1,8 @@
 import {Avatar, Box, ButtonBase, Card, CardContent, Typography} from "@mui/material";
-import UserNavbar from "../components/UserNavbar";
 import React, {useEffect, useState} from "react";
 import {getAuthToken} from "../services/BackendService";
 import {useNavigate} from "react-router-dom";
+import HRNavbar from "../components/HRNavbar";
 
 const cardStyle = {
     position: 'relative',
@@ -51,36 +51,12 @@ export default function HRProfile(){
     },[])
 
     const getCandidate = (id: string) => {
-        try{
-            const formData = new FormData();
-
-            formData.append('id', id);
-
-            fetch("http://localhost:8080/userHR/getCandidate", {
-                method: "POST",
-                headers: {'Authorization': `Bearer ${getAuthToken()}`},
-                body: formData
-            }).then(response => {
-                if (response.status == 200) {
-                    return response.json();
-                }
-                else {
-                    return null;
-                }
-            }).then(data => {
-                if (data !== null){
-                    navigate("/candidate", {state: data});
-                }
-            })
-        }
-        catch (error) {
-            console.error("Błąd pobierania danych: ", error);
-        }
+        navigate("/candidate", {state: {id: id}});
     }
 
     return (
         <Box>
-            <UserNavbar />
+            <HRNavbar />
             <Box sx={{display: 'flex'}}>
             {
                  candidates.map(candidate => (

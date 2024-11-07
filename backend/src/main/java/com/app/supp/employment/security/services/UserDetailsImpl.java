@@ -61,7 +61,7 @@ public class UserDetailsImpl implements UserDetails {
         this.photoFilePath = photoFilePath;
     }
 
-    public UserDetailsImpl(int id, String email, String password, String role, String firstName, String lastName, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(int id, String email, String password, String role, String firstName, String lastName, byte[] photoFilePath, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -69,6 +69,7 @@ public class UserDetailsImpl implements UserDetails {
         this.role = role;
         this.firstName = firstName;
         this.lastName = lastName;
+        this.photoFilePath = photoFilePath;
     }
 
     public static UserDetailsImpl build(Candidate candidate) {
@@ -76,7 +77,7 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(Company company) {
-        return new UserDetailsImpl(company.getId(), company.getEmail(), company.getPassword(), company.getRole(), company.getName(), company.getLastName(), null);
+        return new UserDetailsImpl(company.getId(), company.getEmail(), company.getPassword(), company.getRole(), company.getName(), company.getLastName(), company.getPhotoFilePath(), null);
     }
 
     @Override
