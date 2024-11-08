@@ -9,6 +9,7 @@ import UserProfile from "./pages/UserProfile";
 import SignUpHR from "./pages/SignUpHR";
 import HRProfile from "./pages/HRProfile";
 import Candidate from "./pages/Candidate";
+import HRInfo from "./pages/HRInfo";
 
 
 export default function App(){
@@ -33,9 +34,10 @@ export default function App(){
                 <Route path="/signup" element={<SignUp />}/>
                 <Route path="/signupHR" element={<SignUpHR />}/>
                 <Route path="/login" element={<Login />}/>
-                <Route path="/profile" element={<UserProfile />}></Route>
+                {isAuthenticated && <Route path="/profile" element={<UserProfile />}></Route>}
                 <Route path="/profileHR" element={<HRProfile />}></Route>
                 <Route path="/candidate" element={<Candidate />}/>
+                <Route path="/infoHR" element={<HRInfo />}/>
             </Routes>
         </BrowserRouter>
     )

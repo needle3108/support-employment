@@ -67,7 +67,11 @@ export default function HRNavbar(){
     };
 
     const handleSetting = (setting: string) => {
-        if (setting === settings[3]){
+        if (setting === settings[0]){
+            navigate("/infoHR");
+        }
+
+        else if (setting === settings[3]){
             setAuthHeader(null);
             navigate("/");
         }
