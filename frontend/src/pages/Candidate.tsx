@@ -1,4 +1,4 @@
-import {Avatar, Box, Card, Typography} from "@mui/material";
+import {Avatar, Box, Button, Card, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 import {getAuthToken} from "../services/BackendService";
@@ -68,6 +68,23 @@ export default function Candidate(){
         }
     }, []);
 
+    const handleClick = async () => {
+        try{
+            const formData = new FormData();
+
+            formData.append('idCandidate', location.state.id);
+
+            await fetch("http://localhost:8080/userHR/addFavourite", {
+                method: "POST",
+                headers: {'Authorization': `Bearer ${getAuthToken()}`},
+                body: formData
+            })
+        }
+        catch (error) {
+            console.error("Błąd dodawania kadydata do ulubionych: ", error);
+        }
+    }
+
     return (
         <Box>
             <HRNavbar />
@@ -86,6 +103,7 @@ export default function Candidate(){
                     <Typography variant="subtitle1" sx={typographyStyle}>{description}</Typography>
                     <label>Profesja: </label>
                     <Typography variant="subtitle1" sx={typographyStyle}>{profession}</Typography>
+                    <Button onClick={() => handleClick()}>Dodaj do ulubionych</Button>
                 </Card>
             </Box>
         </Box>

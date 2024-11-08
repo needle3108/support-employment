@@ -2,8 +2,10 @@ package com.app.supp.employment.controllers;
 
 import com.app.supp.employment.models.Candidate;
 import com.app.supp.employment.models.Company;
+import com.app.supp.employment.models.Favourite;
 import com.app.supp.employment.repository.CandidateRepository;
 import com.app.supp.employment.repository.CompanyRepository;
+import com.app.supp.employment.repository.FavouriteRepository;
 import com.app.supp.employment.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -24,6 +26,9 @@ public class UserHRController {
 
     @Autowired
     private CompanyRepository companyRepository;
+
+    @Autowired
+    private FavouriteRepository favouriteRepository;
 
     @GetMapping("/getCandidates")
     public ResponseEntity<List<Candidate>> getCandidates() {
@@ -65,6 +70,37 @@ public class UserHRController {
 
             return ResponseEntity.ok()
                     .body(company);
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/addFavourite")
+    public ResponseEntity<?> addFavourite(@RequestParam int idCandidate) {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            if(candidateRepository.existsById(idCandidate)){
+                favouriteRepository.save(new Favourite(idCandidate, currentUser.getId()));
+                return ResponseEntity.ok().build();
+            }
+
+            return ResponseEntity.notFound().build();
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getFavourites")
+    public ResponseEntity<List<Favourite>> getFavourites() {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            List<Favourite> favourites = favouriteRepository.findAllByIdCompany(currentUser.getId());
+
+            return ResponseEntity.ok().body(favourites);
         } catch (Exception e){
             return ResponseEntity.notFound().build();
         }

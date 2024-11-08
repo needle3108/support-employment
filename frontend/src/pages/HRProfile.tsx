@@ -1,8 +1,9 @@
-import {Avatar, Box, ButtonBase, Card, CardContent, Typography} from "@mui/material";
+import {Avatar, Badge, Box, ButtonBase, Card, CardContent, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {getAuthToken} from "../services/BackendService";
 import {useNavigate} from "react-router-dom";
 import HRNavbar from "../components/HRNavbar";
+import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const cardStyle = {
     position: 'relative',
@@ -23,6 +24,7 @@ const avatarStyle = {
 
 export default function HRProfile(){
     const[candidates, setCandidates] = useState([]);
+    const[favourites, setFavourites] = useState<any[]>([]);
 
     const navigate = useNavigate();
 
@@ -41,6 +43,22 @@ export default function HRProfile(){
             }).then(data => {
                 if (data !== null){
                     setCandidates(data);
+                }
+            })
+
+            fetch("http://localhost:8080/userHR/getFavourites", {
+                method: "GET",
+                headers: {'Authorization': `Bearer ${getAuthToken()}`},
+            }).then(res => {
+                if(res.status === 200){
+                    return res.json();
+                }
+                else{
+                    return null;
+                }
+            }).then(d => {
+                if (d !== null){
+                    setFavourites(d);
                 }
             })
 
@@ -63,9 +81,18 @@ export default function HRProfile(){
                      <Card key={candidate["id"]} sx={cardStyle}>
                          <ButtonBase onClick={() => getCandidate(candidate["id"])}>
                              <CardContent>
-                                 <Typography>
-                                 </Typography>
-                                 <Avatar src={"data:image/png;base64,"+candidate['photoFilePath']} sx={avatarStyle}></Avatar>
+                                 {(favourites.length > 0 && favourites.some(el => el.idCandidate === candidate["id"])) ?
+                                     <Badge
+                                         overlap="circular"
+                                         anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
+                                         badgeContent={
+                                             <FavoriteIcon sx={{color: 'red', width: '40px', height: '40px'}}/>
+                                         }
+                                     >
+                                         <Avatar src={"data:image/png;base64,"+candidate['photoFilePath']} sx={avatarStyle}></Avatar>
+                                     </Badge> :
+                                     <Avatar src={"data:image/png;base64,"+candidate['photoFilePath']} sx={avatarStyle}></Avatar>
+                                 }
                                  <Typography variant="h6">
                                      {candidate["firstName"]} {candidate["lastName"]}
                                  </Typography>
