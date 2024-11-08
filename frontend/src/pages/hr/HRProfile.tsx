@@ -1,8 +1,8 @@
 import {Avatar, Badge, Box, ButtonBase, Card, CardContent, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
-import {getAuthToken} from "../services/BackendService";
+import {getAuthToken} from "../../services/BackendService";
 import {useNavigate} from "react-router-dom";
-import HRNavbar from "../components/HRNavbar";
+import HRNavbar from "../../components/HRNavbar";
 import FavoriteIcon from '@mui/icons-material/Favorite';
 
 const cardStyle = {

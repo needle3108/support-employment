@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {getAuthToken} from "../services/BackendService";
+import {getAuthToken} from "../../services/BackendService";
 import {Avatar, Badge, Box, ButtonBase, Card, CardContent, Typography} from "@mui/material";
-import HRNavbar from "../components/HRNavbar";
+import HRNavbar from "../../components/HRNavbar";
 import FavoriteIcon from "@mui/icons-material/Favorite";
 import {useNavigate} from "react-router-dom";
 

@@ -45,6 +45,9 @@ public class UserDetailsImpl implements UserDetails {
     @Getter
     private byte[] photoFilePath;
 
+    @Getter
+    private String companyName;
+
     private final Collection<? extends GrantedAuthority> authorities;
 
     public UserDetailsImpl(int id, String email, String password, String role, String firstName, String lastName, String phoneNumber, String description, String profession, byte[] photoFilePath, Collection<? extends GrantedAuthority> authorities) {
@@ -61,7 +64,7 @@ public class UserDetailsImpl implements UserDetails {
         this.photoFilePath = photoFilePath;
     }
 
-    public UserDetailsImpl(int id, String email, String password, String role, String firstName, String lastName, byte[] photoFilePath, Collection<? extends GrantedAuthority> authorities) {
+    public UserDetailsImpl(int id, String email, String password, String role, String firstName, String lastName, byte[] photoFilePath, String companyName, Collection<? extends GrantedAuthority> authorities) {
         this.id = id;
         this.email = email;
         this.password = password;
@@ -70,6 +73,7 @@ public class UserDetailsImpl implements UserDetails {
         this.firstName = firstName;
         this.lastName = lastName;
         this.photoFilePath = photoFilePath;
+        this.companyName = companyName;
     }
 
     public static UserDetailsImpl build(Candidate candidate) {
@@ -77,7 +81,7 @@ public class UserDetailsImpl implements UserDetails {
     }
 
     public static UserDetailsImpl build(Company company) {
-        return new UserDetailsImpl(company.getId(), company.getEmail(), company.getPassword(), company.getRole(), company.getName(), company.getLastName(), company.getPhotoFilePath(), null);
+        return new UserDetailsImpl(company.getId(), company.getEmail(), company.getPassword(), company.getRole(), company.getName(), company.getLastName(), company.getPhotoFilePath(), company.getCompanyName(), null);
     }
 
     @Override

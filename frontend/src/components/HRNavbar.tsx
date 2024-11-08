@@ -66,6 +66,10 @@ export default function HRNavbar(){
         setAnchorElUser(null);
     };
 
+    const handleClick = () => {
+        navigate("/profileHR")
+    }
+
     const handleSetting = (setting: string) => {
         if (setting === settings[0]){
             navigate("/infoHR");
@@ -86,9 +90,11 @@ export default function HRNavbar(){
             <Box>
                 <AppBar position="static" sx={style}>
                     <Toolbar>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontFamily: "Lucida Handwriting"}} fontStyle="inherit">
-                            HireMe
-                        </Typography>
+                        <IconButton onClick={() => handleClick()}>
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontFamily: "Lucida Handwriting"}} fontStyle="inherit">
+                                HireMe
+                            </Typography>
+                        </IconButton>
                         <Box sx={{ flexGrow: 0 }}>
                             <Tooltip title="Opcje">
                                 <IconButton onClick={handleOpenMenu} sx={{ p: 0 }}>

@@ -3,9 +3,12 @@ package com.app.supp.employment.controllers;
 import com.app.supp.employment.models.Candidate;
 import com.app.supp.employment.models.Company;
 import com.app.supp.employment.models.Favourite;
+import com.app.supp.employment.models.Opinion;
+import com.app.supp.employment.payload.response.OpinionResponse;
 import com.app.supp.employment.repository.CandidateRepository;
 import com.app.supp.employment.repository.CompanyRepository;
 import com.app.supp.employment.repository.FavouriteRepository;
+import com.app.supp.employment.repository.OpinionRepository;
 import com.app.supp.employment.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -13,6 +16,8 @@ import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
+import java.time.LocalDateTime;
+import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
@@ -29,6 +34,9 @@ public class UserHRController {
 
     @Autowired
     private FavouriteRepository favouriteRepository;
+
+    @Autowired
+    private OpinionRepository opinionRepository;
 
     @GetMapping("/getCandidates")
     public ResponseEntity<List<Candidate>> getCandidates() {
@@ -121,6 +129,43 @@ public class UserHRController {
 
             return ResponseEntity.ok().body(candidates);
         } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/getOpinions")
+    public ResponseEntity<?> getOpinions(@RequestParam int id) {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            List<Opinion> opinions = opinionRepository.findAllByIdCandidate(id);
+
+            List<OpinionResponse> response = new ArrayList<>();
+
+            for(Opinion opinion : opinions){
+                response.add(new OpinionResponse(opinion.getId(), currentUser.getFirstName(), currentUser.getLastName(), currentUser.getCompanyName(),
+                        currentUser.getPhotoFilePath(), opinion.getOpinionTime(), opinion.getOpinion()));
+            }
+
+            return ResponseEntity.ok().body(response);
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/addOpinion")
+    public ResponseEntity<?> addOpinion(@RequestParam int idCandidate, @RequestParam String opinion) {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            ZoneId zone = ZoneId.of("Europe/Warsaw");
+
+            opinionRepository.save(new Opinion(idCandidate, currentUser.getId(), LocalDateTime.now(zone), opinion));
+
+            return ResponseEntity.ok().build();
+        }  catch (Exception e){
             return ResponseEntity.notFound().build();
         }
     }

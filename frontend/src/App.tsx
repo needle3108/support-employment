@@ -5,12 +5,12 @@ import Login from "./pages/Login";
 import {useEffect, useState} from "react";
 import {getAuthToken} from "./services/BackendService";
 import {jwtDecode} from "jwt-decode";
-import UserProfile from "./pages/UserProfile";
+import UserProfile from "./pages/candidate/UserProfile";
 import SignUpHR from "./pages/SignUpHR";
-import HRProfile from "./pages/HRProfile";
-import Candidate from "./pages/Candidate";
-import HRInfo from "./pages/HRInfo";
-import Favourites from "./pages/Favourites";
+import HRProfile from "./pages/hr/HRProfile";
+import Candidate from "./pages/hr/Candidate";
+import HRInfo from "./pages/hr/HRInfo";
+import Favourites from "./pages/hr/Favourites";
 
 
 export default function App(){
@@ -35,7 +35,7 @@ export default function App(){
                 <Route path="/signup" element={<SignUp />}/>
                 <Route path="/signupHR" element={<SignUpHR />}/>
                 <Route path="/login" element={<Login />}/>
-                {isAuthenticated && <Route path="/profile" element={<UserProfile />}></Route>}
+                <Route path="/profile" element={<UserProfile />}></Route>
                 <Route path="/profileHR" element={<HRProfile />}></Route>
                 <Route path="/candidate" element={<Candidate />}/>
                 <Route path="/infoHR" element={<HRInfo />}/>

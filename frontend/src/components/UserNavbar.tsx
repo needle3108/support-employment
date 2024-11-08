@@ -21,6 +21,10 @@ const style = {
 export default function UserNavbar(){
     const navigate = useNavigate();
 
+    const handleClick = () => {
+        navigate("/profile")
+    }
+
     const logout = () => {
         setAuthHeader(null);
         navigate("/");
@@ -31,9 +35,11 @@ export default function UserNavbar(){
                 <Box>
                     <AppBar position="static" sx={style}>
                         <Toolbar>
-                            <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontFamily: "Lucida Handwriting"}} fontStyle="inherit">
-                                HireMe
-                            </Typography>
+                            <IconButton onClick={() => handleClick()}>
+                                <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontFamily: "Lucida Handwriting"}} fontStyle="inherit">
+                                    HireMe
+                                </Typography>
+                            </IconButton>
                             <MessageIcon sx={{ml: '8px'}}/>
                             <NotificationsIcon sx={{ml: '8px'}}/>
                             <IconButton onClick={logout}>

@@ -1,6 +1,7 @@
-import {AppBar, Box, Button, createTheme, ThemeProvider, Toolbar, Typography} from "@mui/material";
+import {AppBar, Box, Button, createTheme, IconButton, ThemeProvider, Toolbar, Typography} from "@mui/material";
 import ModalButtons from "./ModalButtons";
 import LoginIcon from '@mui/icons-material/Login';
+import {useNavigate} from "react-router-dom";
 
 const theme = createTheme({
     palette: {
@@ -16,14 +17,22 @@ const style = {
 }
 
 export default function Navbar(){
+    const navigate = useNavigate();
+
+    const handleClick = () => {
+        navigate("/");
+    }
+
     return (
         <ThemeProvider theme={theme}>
             <Box>
                 <AppBar position="static" sx={style}>
                     <Toolbar>
-                        <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontFamily: "Lucida Handwriting"}} fontStyle="inherit">
-                            HireMe
-                        </Typography>
+                        <IconButton onClick={() => handleClick()}>
+                            <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontFamily: "Lucida Handwriting"}} fontStyle="inherit">
+                                HireMe
+                            </Typography>
+                        </IconButton>
                         <ModalButtons />
                         <Button href="login" color="inherit">
                             Zaloguj się

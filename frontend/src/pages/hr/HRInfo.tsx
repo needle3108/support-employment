@@ -1,7 +1,7 @@
 import React, {useEffect, useState} from "react";
-import {getAuthToken} from "../services/BackendService";
+import {getAuthToken} from "../../services/BackendService";
 import {Avatar, Box, Card, Typography} from "@mui/material";
-import HRNavbar from "../components/HRNavbar";
+import HRNavbar from "../../components/HRNavbar";
 
 const cardStyle = {
     position: 'absolute',
