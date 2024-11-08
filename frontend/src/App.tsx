@@ -10,6 +10,7 @@ import SignUpHR from "./pages/SignUpHR";
 import HRProfile from "./pages/HRProfile";
 import Candidate from "./pages/Candidate";
 import HRInfo from "./pages/HRInfo";
+import Favourites from "./pages/Favourites";
 
 
 export default function App(){
@@ -38,6 +39,7 @@ export default function App(){
                 <Route path="/profileHR" element={<HRProfile />}></Route>
                 <Route path="/candidate" element={<Candidate />}/>
                 <Route path="/infoHR" element={<HRInfo />}/>
+                <Route path="/myFavourites" element={<Favourites />}/>
             </Routes>
         </BrowserRouter>
     )

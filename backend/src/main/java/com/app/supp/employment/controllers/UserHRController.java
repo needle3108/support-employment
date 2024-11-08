@@ -105,4 +105,23 @@ public class UserHRController {
             return ResponseEntity.notFound().build();
         }
     }
+
+    @GetMapping("/getMyFavourites")
+    public ResponseEntity<List<Candidate>> getMyFavourites() {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            List<Favourite> favourites = favouriteRepository.findAllByIdCompany(currentUser.getId());
+            List<Candidate> candidates = new ArrayList<>();
+
+            for(Favourite favourite : favourites){
+                candidates.add(candidateRepository.findById(favourite.getIdCandidate()));
+            }
+
+            return ResponseEntity.ok().body(candidates);
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
 }

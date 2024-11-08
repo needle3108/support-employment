@@ -71,6 +71,10 @@ export default function HRNavbar(){
             navigate("/infoHR");
         }
 
+        else if (setting === settings[2]){
+            navigate("/myFavourites");
+        }
+
         else if (setting === settings[3]){
             setAuthHeader(null);
             navigate("/");
