@@ -12,6 +12,14 @@ const cardStyle = {
     boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
 }
 
+const cardStyle4 = {
+    position: 'absolute',
+    top: '80%',
+    left: '5%',
+    right: '52%',
+    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+}
+
 const avatarStyle = {
     width: '230px',
     height: '230px',
@@ -75,6 +83,7 @@ export default function Candidate(){
     const[file, setFile] = useState("");
     const[opinions, setOpinions] = useState([]);
     const[opinionContext, setOpinionContext] = useState("");
+    const[message, setMessage] = useState("");
 
     const location = useLocation();
 
@@ -178,6 +187,37 @@ export default function Candidate(){
         }
     }
 
+    const handleSendMessage = async () => {
+        try{
+            const formData = new FormData();
+            formData.append('idCandidate', location.state.id);
+
+            if (message.length === 0){
+                console.error("Wiadomość nie może być pusta");
+                return null;
+            }
+            else{
+                formData.append('message', message);
+            }
+
+            await fetch("http://localhost:8080/userHR/sendMessage", {
+                method: "POST",
+                headers: {'Authorization': `Bearer ${getAuthToken()}`},
+                body: formData
+            }).then(response => {
+                if (response.status == 200) {
+                    console.log("Wiadomość została wysłana")
+                }
+                else{
+                    console.error("Błąd wysyłania wiadomości")
+                }
+            })
+        }
+        catch (error) {
+            console.error("Błąd wysyłania wiadomości: ", error);
+        }
+    }
+
     return (
         <Box>
             <HRNavbar />
@@ -198,6 +238,21 @@ export default function Candidate(){
                     <Typography variant="subtitle1" sx={typographyStyle}>{profession}</Typography>
                     <Button onClick={() => handleClick()} sx={buttonStyle}>Dodaj do ulubionych</Button>
                 </Card>
+                <Card sx={cardStyle}>
+                    <TextField
+                        label="Wiadomość"
+                        onChange={e => setMessage(e.target.value)}
+                        variant="standard"
+                        color="secondary"
+                        type="text"
+                        sx={textFieldStyle}
+                        value={message}
+                        helperText="Napisz wiadomość do kandydata"
+                        multiline
+                        maxRows={8}
+                    />
+                </Card>
+                <Button onClick={() => handleSendMessage()} sx={buttonStyle}>Wyślij wiadomość</Button>
             </Box>
             <Box>
                 <Card sx={cardStyle3}>

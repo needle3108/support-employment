@@ -1,14 +1,9 @@
 package com.app.supp.employment.controllers;
 
-import com.app.supp.employment.models.Candidate;
-import com.app.supp.employment.models.Company;
-import com.app.supp.employment.models.Favourite;
-import com.app.supp.employment.models.Opinion;
+import com.app.supp.employment.models.*;
+import com.app.supp.employment.payload.response.ContactResponse;
 import com.app.supp.employment.payload.response.OpinionResponse;
-import com.app.supp.employment.repository.CandidateRepository;
-import com.app.supp.employment.repository.CompanyRepository;
-import com.app.supp.employment.repository.FavouriteRepository;
-import com.app.supp.employment.repository.OpinionRepository;
+import com.app.supp.employment.repository.*;
 import com.app.supp.employment.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
@@ -37,6 +32,9 @@ public class UserHRController {
 
     @Autowired
     private OpinionRepository opinionRepository;
+
+    @Autowired
+    private MessageRepository messageRepository;
 
     @GetMapping("/getCandidates")
     public ResponseEntity<List<Candidate>> getCandidates() {
@@ -167,7 +165,44 @@ public class UserHRController {
             opinionRepository.save(new Opinion(idCandidate, currentUser.getId(), LocalDateTime.now(zone), opinion));
 
             return ResponseEntity.ok().build();
-        }  catch (Exception e){
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/sendMessage")
+    public ResponseEntity<?> sendMessage(@RequestParam int idCandidate, @RequestParam String message) {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            ZoneId zone = ZoneId.of("Europe/Warsaw");
+
+            messageRepository.save(new Message(idCandidate, currentUser.getId(), LocalDateTime.now(zone), message));
+
+            return ResponseEntity.ok().build();
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @GetMapping("/getMyContacts")
+    public ResponseEntity<?> getMyContacts() {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            List<ContactResponse> contacts = new ArrayList<>();
+
+            List<Message> messages = messageRepository.findAllByIdCompany(currentUser.getId());
+
+            for(Message message : messages){
+                Candidate candidate = candidateRepository.findById(message.getIdCandidate());
+                contacts.add(new ContactResponse(message.getId(), candidate.getFirstName(), candidate.getLastName(), candidate.getPhotoFilePath()));
+            }
+
+            return ResponseEntity.ok().body(contacts);
+        } catch (Exception e){
             return ResponseEntity.notFound().build();
         }
     }

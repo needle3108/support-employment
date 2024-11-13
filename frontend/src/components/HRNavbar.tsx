@@ -75,6 +75,10 @@ export default function HRNavbar(){
             navigate("/infoHR");
         }
 
+        else if (setting === settings[1]){
+            navigate("/myMessages");
+        }
+
         else if (setting === settings[2]){
             navigate("/myFavourites");
         }

@@ -11,6 +11,7 @@ import HRProfile from "./pages/hr/HRProfile";
 import Candidate from "./pages/hr/Candidate";
 import HRInfo from "./pages/hr/HRInfo";
 import Favourites from "./pages/hr/Favourites";
+import MessagesHR from "./pages/hr/MessagesHR";
 
 
 export default function App(){
@@ -40,6 +41,7 @@ export default function App(){
                 <Route path="/candidate" element={<Candidate />}/>
                 <Route path="/infoHR" element={<HRInfo />}/>
                 <Route path="/myFavourites" element={<Favourites />}/>
+                <Route path="/myMessages" element={<MessagesHR />}/>
             </Routes>
         </BrowserRouter>
     )
