@@ -45,7 +45,7 @@ const cardStyle2 = {
     mr: '13px',
     mb: '13px',
     textAlign: 'center',
-    flexShrink: '0'
+    flexShrink: '0',
 }
 
 const cardStyle3 = {
@@ -62,6 +62,7 @@ const boxStyle = {
     right: '5%',
     top: '35%',
     display: 'flex',
+    flexWrap: 'wrap'
 }
 
 export default function Candidate(){

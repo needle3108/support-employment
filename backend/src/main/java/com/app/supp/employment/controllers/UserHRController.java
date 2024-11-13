@@ -144,8 +144,10 @@ public class UserHRController {
             List<OpinionResponse> response = new ArrayList<>();
 
             for(Opinion opinion : opinions){
-                response.add(new OpinionResponse(opinion.getId(), currentUser.getFirstName(), currentUser.getLastName(), currentUser.getCompanyName(),
-                        currentUser.getPhotoFilePath(), opinion.getOpinionTime(), opinion.getOpinion()));
+                Company company = companyRepository.findById(opinion.getIdCompany());
+
+                response.add(new OpinionResponse(opinion.getId(), company.getName(), company.getLastName(), company.getCompanyName(),
+                        company.getPhotoFilePath(), opinion.getOpinionTime(), opinion.getOpinion()));
             }
 
             return ResponseEntity.ok().body(response);
