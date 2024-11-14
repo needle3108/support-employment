@@ -39,6 +39,7 @@ CREATE TABLE IF NOT EXISTS messages(
     id_company INT NOT NULL,
     message_time DATETIME NOT NULL,
     message VARCHAR(2555) NOT NULL,
+    sender VARCHAR(255) NOT NULL,
 
     PRIMARY KEY (id),
 

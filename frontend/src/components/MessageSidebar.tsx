@@ -34,8 +34,8 @@ export default function MessageSidebar(){
             bgcolor: 'background.paper',
             borderRight: 1,
             borderColor: 'divider',
-            mt: '5%',
-            height: '80%',
+            mt: '1%',
+            height: '99%',
             overflow: 'auto'
         }}>
             {contacts.map((contact) => (

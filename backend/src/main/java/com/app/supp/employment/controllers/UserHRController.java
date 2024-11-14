@@ -178,7 +178,7 @@ public class UserHRController {
 
             ZoneId zone = ZoneId.of("Europe/Warsaw");
 
-            messageRepository.save(new Message(idCandidate, currentUser.getId(), LocalDateTime.now(zone), message));
+            messageRepository.save(new Message(idCandidate, currentUser.getId(), LocalDateTime.now(zone), message, currentUser.getRole()));
 
             return ResponseEntity.ok().build();
         } catch (Exception e){

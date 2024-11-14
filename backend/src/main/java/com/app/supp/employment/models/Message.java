@@ -23,12 +23,15 @@ public class Message {
 
     private String message;
 
+    private String sender;
+
     public Message() {}
 
-    public Message(int idCandidate, int idCompany, LocalDateTime messageTime, String message) {
+    public Message(int idCandidate, int idCompany, LocalDateTime messageTime, String message, String sender) {
         this.idCandidate = idCandidate;
         this.idCompany = idCompany;
         this.messageTime = messageTime;
         this.message = message;
+        this.sender = sender;
     }
 }
