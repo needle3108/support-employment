@@ -1,13 +1,11 @@
 package com.app.supp.employment.controllers;
 
 import com.app.supp.employment.models.*;
-import com.app.supp.employment.payload.request.MessageRequest;
 import com.app.supp.employment.payload.response.ContactResponse;
 import com.app.supp.employment.payload.response.GetMessagesResponse;
 import com.app.supp.employment.payload.response.OpinionResponse;
 import com.app.supp.employment.repository.*;
 import com.app.supp.employment.security.services.UserDetailsImpl;
-import jakarta.validation.Valid;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
@@ -216,13 +214,13 @@ public class UserHRController {
     }
 
     @PostMapping("/getMessages")
-    public ResponseEntity<?> getMessages(@Valid @RequestBody MessageRequest messageRequest) {
+    public ResponseEntity<?> getMessages(@RequestParam int id) {
         try{
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
 
             List<GetMessagesResponse> response = new ArrayList<>();
-            List<Message> messages = messageRepository.findAllByIdCompanyAndIdCandidate(currentUser.getId(), messageRequest.getId());
+            List<Message> messages = messageRepository.findAllByIdCompanyAndIdCandidate(currentUser.getId(), id);
 
             for(Message message : messages){
                 response.add(new GetMessagesResponse(message.getId(),message.getMessage(), message.getMessageTime(), message.getSender()));

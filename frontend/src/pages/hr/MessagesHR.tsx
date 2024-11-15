@@ -8,16 +8,19 @@ export default function MessagesHR(){
     const theme = useTheme();
 
     const [current, setCurrent] = useState("");
+    const [currentName, setCurrentName] = useState("");
+    const [currentLastName, setCurrentLastName] = useState("");
+    const [currentImage, setCurrentImage] = useState("");
     const [contacts, setContacts] = useState<any[]>([]);
-
-    const[message, setMessage] = useState("");
-    const[messages, setMessages] = useState<any[]>([]);
+    const [sendState, setSendState] = useState("");
+    const [message, setMessage] = useState("");
+    const [messages, setMessages] = useState<any[]>([]);
 
     const messagesEndRef = useRef<null | HTMLDivElement>(null);
 
-    const scrollToBottom = () => {
+    useEffect(() => {
         messagesEndRef.current?.scrollIntoView({behavior: "smooth"});
-    }
+    }, [messages]);
 
     useEffect(() => {
         try{
@@ -35,16 +38,31 @@ export default function MessagesHR(){
                 }).then(data => {
                     if (data !== null){
                         setContacts(data);
-                        setCurrent(data[0]["id"]);
+                        if (current === ""){
+                            setCurrent(data[0]["id"]);
+                            setCurrentName(data[0]["firstName"]);
+                            setCurrentLastName(data[0]["lastName"]);
+                            setCurrentImage(data[0]["image"])
+                        }
                     }
                 })
             }
+            fC();
+        } catch (error) {
+            console.error("Błąd pobierania danych: ", error);
+        }
+    }, []);
 
+    useEffect(() => {
+        try{
             const fM = async function fetchMessages(){
+                const formData = new FormData();
+                formData.append("id", current);
+
                 await fetch("http://localhost:8080/userHR/getMessages", {
                     method: "POST",
                     headers: {'Authorization': `Bearer ${getAuthToken()}`},
-                    body: JSON.stringify({id: current})
+                    body: formData
                 }).then(response => {
                     if(response.status === 200){
                         return response.json();
@@ -57,27 +75,34 @@ export default function MessagesHR(){
                         setMessages(data);
                     }
                 })
-                scrollToBottom();
             }
-
-            fC();
             fM();
         }
         catch (error) {
             console.error("Błąd pobierania danych: ", error);
         }
-    }, [current]);
+    }, [current, sendState]);
 
     const handleSendMessage = () => {
         if (message.trim()) {
-            const newMessage = {
-                id: messages.length + 1,
-                text: message,
-                sender: "HR",
-                timestamp: new Date().toLocaleDateString([], {hour: '2-digit', minute: '2-digit'}),
-            };
-            setMessages([...messages, newMessage]);
-            setMessage("");
+            const formData = new FormData();
+            formData.append("idCandidate", current);
+            formData.append("message", message);
+
+            fetch("http://localhost:8080/userHR/sendMessage", {
+                method: "POST",
+                headers: {'Authorization': `Bearer ${getAuthToken()}`},
+                body: formData
+            }).then(response => {
+                if(response.status === 200){
+                    console.log("Wiadomość została wysłana");
+                    setSendState(message);
+                    setMessage("");
+                }
+                else{
+                    console.error("Błąd wysyłania wiadomości");
+                }
+            })
         }
     }
 
@@ -103,7 +128,12 @@ export default function MessagesHR(){
                 }}>
                     {contacts.map((contact) => (
                         <Box key = {contact['id']}
-                             onClick={() => setCurrent(contact['id'])}
+                             onClick={() => {
+                                 setCurrent(contact['id']);
+                                 setCurrentName(contact['firstName']);
+                                 setCurrentLastName(contact['lastName']);
+                                 setCurrentImage(contact['image']);
+                             }}
                              sx = {{
                                  p: 2,
                                  display: 'flex',
@@ -127,9 +157,9 @@ export default function MessagesHR(){
                         display: 'flex',
                         alignItems: 'center'
                     }}>
-                        <Avatar src={"T"}></Avatar>
+                        <Avatar src={"data:image/png;base64,"+currentImage}></Avatar>
                         <Box sx={{ml:2}}>
-                            <Typography variant="h6">Aktualny chat</Typography>
+                            <Typography variant="h6">{currentName} {currentLastName}</Typography>
                         </Box>
                     </Box>
                     <Box sx={{
