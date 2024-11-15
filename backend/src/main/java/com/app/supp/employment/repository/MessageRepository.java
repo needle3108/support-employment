@@ -7,5 +7,6 @@ import java.util.List;
 
 public interface MessageRepository extends JpaRepository<Message, Integer> {
     List<Message> findAllByIdCompany(int idCompany);
+    List<Message> findAllByIdCandidate(int idCandidate);
     List<Message> findAllByIdCompanyAndIdCandidate(int idCompany, int idCandidate);
 }
