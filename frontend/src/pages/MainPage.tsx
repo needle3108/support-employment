@@ -4,7 +4,7 @@ import {grey} from "@mui/material/colors";
 
 export default function MainPage(){
     return (
-        <Box sx={{margin: 0, padding: 0, bgcolor: grey[200]}}>
+        <Box sx={{bgcolor: grey[200], height: '100%', width: '100%', left: 0, top: 0, overflow: 'auto', position: 'fixed'}}>
             <Navbar />
             <Box sx={{display: 'flex', height: '91vh'}}>
                 <Card sx={{

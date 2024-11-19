@@ -64,8 +64,8 @@ public class AuthController {
     public ResponseEntity<?> registerUser(@ModelAttribute SignupRequest signupRequest) {
         if (candidateRepository.existsByEmail(signupRequest.getEmail())) {
             return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .status(HttpStatus.CONFLICT)
+                    .body(new MessageResponse("Email jest już w użyciu!"));
         }
 
         try{
@@ -84,7 +84,7 @@ public class AuthController {
             candidate.setRole("USER");
             candidateRepository.save(candidate);
 
-            return ResponseEntity.ok(new MessageResponse("Successfully registered!"));
+            return ResponseEntity.ok(new MessageResponse("Rejestracja przebiegła pomyślnie!"));
         }
         catch(IOException e){
             System.out.println(e.getMessage());
@@ -96,8 +96,8 @@ public class AuthController {
     public ResponseEntity<?> registerCompany(@ModelAttribute SignUpHRRequest signUpHRRequest) {
         if (companyRepository.existsByEmail(signUpHRRequest.getEmail())) {
             return ResponseEntity
-                    .badRequest()
-                    .body(new MessageResponse("Error: Email is already in use!"));
+                    .status(HttpStatus.CONFLICT)
+                    .body(new MessageResponse("Email jest już w użyciu!"));
         }
 
         try{
@@ -113,7 +113,7 @@ public class AuthController {
             company.setRole("HR");
             companyRepository.save(company);
 
-            return ResponseEntity.ok(new MessageResponse("Successfully registered!"));
+            return ResponseEntity.ok(new MessageResponse("Rejestracja przebiegła pomyślnie!"));
         }
         catch(IOException e){
             System.out.println(e.getMessage());

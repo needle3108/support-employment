@@ -6,7 +6,6 @@ import {useEffect, useState} from "react";
 import {getAuthToken} from "./services/BackendService";
 import {jwtDecode} from "jwt-decode";
 import UserProfile from "./pages/candidate/UserProfile";
-import SignUpHR from "./pages/SignUpHR";
 import HRProfile from "./pages/hr/HRProfile";
 import Candidate from "./pages/hr/Candidate";
 import HRInfo from "./pages/hr/HRInfo";
@@ -35,7 +34,7 @@ export default function App(){
             <Routes>
                 <Route path="/" element={<MainPage />}/>
                 <Route path="/signup" element={<SignUp />}/>
-                <Route path="/signupHR" element={<SignUpHR />}/>
+                <Route path="/signupHR" element={<SignUp />}/>
                 <Route path="/login" element={<Login />}/>
                 <Route path="/profile" element={<UserProfile />}></Route>
                 <Route path="/profileHR" element={<HRProfile />}></Route>
