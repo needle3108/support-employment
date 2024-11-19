@@ -19,6 +19,7 @@ const buttonStyle = {
     bgcolor: 'rgb(96,58,120)',
     color: 'white',
     borderRadius: '5px',
+    '&:hover': { bgcolor: "rgb(207, 159, 255)"}
 }
 
 export default function ModalButtons(){
