@@ -3,6 +3,8 @@ import {Avatar, Box, IconButton, Paper, TextField, Typography, useTheme} from "@
 import {getAuthToken} from "../../services/BackendService";
 import SendIcon from "@mui/icons-material/Send";
 import UserNavbar from "../../components/UserNavbar";
+import {grey} from "@mui/material/colors";
+import {format} from "date-fns";
 
 export default function MessagesUser(){
     const theme = useTheme();
@@ -114,7 +116,7 @@ export default function MessagesUser(){
     }
 
     return (
-        <Box>
+        <Box sx={{bgcolor: grey[200], height: '100%', width: '100%', left: 0, top: 0, overflow: 'auto', position: 'fixed'}}>
             <UserNavbar />
             <Box sx={{display: 'flex', height: '91vh'}}>
                 <Box sx={{
@@ -122,8 +124,7 @@ export default function MessagesUser(){
                     bgcolor: 'background.paper',
                     borderRight: 1,
                     borderColor: 'divider',
-                    mt: '1%',
-                    height: '99%',
+                    height: '100%',
                     overflow: 'auto'
                 }}>
                     {contacts.map((contact) => (
@@ -139,7 +140,8 @@ export default function MessagesUser(){
                                  display: 'flex',
                                  alignItems: 'center',
                                  cursor: 'pointer',
-                                 transition: 'background-color 0.3s'
+                                 transition: 'background-color 0.3s',
+                                 '&:hover': { background: 'linear-gradient(90deg, rgba(96,58,120,1) 0%, rgba(210,210,210,1) 100%, rgba(0,212,255,1) 100%)', color: 'white'}
                              }}>
                             <Avatar src={"data:image/png;base64,"+contact['image']}></Avatar>
                             <Box sx={{ml: 2}}>
@@ -178,7 +180,7 @@ export default function MessagesUser(){
                                     padding: theme.spacing(1.5),
                                     maxWidth: '70%',
                                     borderRadius: 5,
-                                    backgroundColor: msg.sender === "USER" ? theme.palette.primary.main : theme.palette.grey[100],
+                                    backgroundColor: msg.sender === "USER" ? 'rgb(96,58,120)' : theme.palette.grey[100],
                                     color: msg.sender === "USER" ? theme.palette.primary.contrastText : "inherit",
                                     position: 'relative',
                                     transition: "all 0.3s ease",
@@ -196,7 +198,7 @@ export default function MessagesUser(){
                                         gap: 0.5
                                     }}>
                                         <Typography variant="caption" color={msg.sender === "USER" ? "inherit": "text.secondary"}>
-                                            {msg.timestamp}
+                                            {format(msg.timestamp,"d.MM.yyyy H:mm")}
                                         </Typography>
                                     </Box>
                                 </Paper>
@@ -219,18 +221,19 @@ export default function MessagesUser(){
                                 onChange={(e) => setMessage(e.target.value)}
                                 onKeyDown={handleKeyDown}
                                 placeholder="Napisz wiadomość..."
-                                variant="outlined"
                                 size="small"
-                                sx={{"& .MuiOutlinedInput-root": {borderRadius: 3}}}
+                                sx={{
+                                    '& .MuiOutlinedInput-root': {borderRadius: 3,  '&.Mui-focused fieldset': {borderColor: 'rgb(96,58,120)'}}
+                                }}
                             />
                             <IconButton
                                 color="primary"
                                 onClick={handleSendMessage}
                                 aria-label="wyślij wiadomość"
                                 sx={{
-                                    bgcolor: "primary.main",
+                                    bgcolor: 'rgb(96,58,120)',
                                     color: "white",
-                                    "&:hover": { bgcolor: "primary.dark"}
+                                    '&:hover': { bgcolor: "rgb(207, 159, 255)"}
                                 }}
                             >
                                 <SendIcon />

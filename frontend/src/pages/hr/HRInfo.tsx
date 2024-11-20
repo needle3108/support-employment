@@ -2,20 +2,12 @@ import React, {useEffect, useState} from "react";
 import {getAuthToken} from "../../services/BackendService";
 import {Avatar, Box, Card, Typography} from "@mui/material";
 import HRNavbar from "../../components/HRNavbar";
-
-const cardStyle = {
-    position: 'absolute',
-    top: '12%',
-    left: '30%',
-    right: '30%',
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-}
+import {grey} from "@mui/material/colors";
 
 const avatarStyle = {
     width: '230px',
     height: '230px',
     margin: 'auto',
-    mt: '10px'
 }
 
 const typographyStyle = {
@@ -58,21 +50,40 @@ export default function HRInfo(){
     }, []);
 
     return(
-        <Box>
+        <Box sx={{bgcolor: grey[200], height: '100%', width: '100%', left: 0, top: 0, overflow: 'auto', position: 'fixed'}}>
             <HRNavbar />
-            <Box>
-                <Card sx={cardStyle}>
-                    <Avatar src={"data:image/png;base64,"+file} sx={avatarStyle}></Avatar>
-                    <label>Imię: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{name}</Typography>
-                    <label>Nazwisko: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{lastName}</Typography>
-                    <label>Email: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{email}</Typography>
-                    <label>Miasto: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{city}</Typography>
-                    <label>Nazwa firmy: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{companyName}</Typography>
+            <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 10}}>
+                <Card sx={{
+                    position: 'relative',
+                    padding: 1,
+                    width: '750px',
+                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+                    overflow: 'hidden',
+                    '&:hover': { background: 'radial-gradient(circle, rgba(211,185,227,1) 0%, rgba(210,210,210,1) 100%, rgba(0,212,255,1) 100%)'},
+                }}>
+                    <Box sx={{display: 'flex'}}>
+                        <Box sx={{
+                            width: '40%',
+                            overflow: 'hidden',
+                            padding: 1,
+                            minWidth: '200px',
+                        }}>
+                            <Avatar src={"data:image/png;base64,"+file} sx={avatarStyle}></Avatar>
+                        </Box>
+                        <Box sx={{
+                            width: '60%',
+                            overflow: 'hidden',
+                            padding: 2,
+                            minWidth: '400px',
+                            mt: 2
+                        }}>
+                            <Typography variant="subtitle1" sx={typographyStyle}>Imię: {name}</Typography>
+                            <Typography variant="subtitle1" sx={typographyStyle}>Nazwisko: {lastName}</Typography>
+                            <Typography variant="subtitle1" sx={typographyStyle}>Email: {email}</Typography>
+                            <Typography variant="subtitle1" sx={typographyStyle}>Miasto: {city}</Typography>
+                            <Typography variant="subtitle1" sx={typographyStyle}>Nazwa firmy: {companyName}</Typography>
+                        </Box>
+                    </Box>
                 </Card>
             </Box>
         </Box>

@@ -61,7 +61,6 @@ export default function HRProfile(){
                     setFavourites(d);
                 }
             })
-
         }
         catch (error) {
             console.error("Błąd pobierania danych: ", error);

@@ -91,10 +91,16 @@ export default function HRNavbar(){
 
     return(
         <ThemeProvider theme={theme}>
-            <Box>
+            <Box sx={{margin: 1}}>
                 <AppBar position="static" sx={style}>
-                    <Toolbar>
-                        <IconButton onClick={() => handleClick()}>
+                    <Toolbar sx={{justifyContent: 'space-between'}}>
+                        <IconButton
+                            onClick={() => handleClick()}
+                            aria-label="Strona główna"
+                            sx={{
+                                color: "white",
+                                "&:hover": { bgcolor: "primary.dark"}
+                            }}>
                             <Typography variant="h6" component="div" sx={{ flexGrow: 1, fontFamily: "Lucida Handwriting"}} fontStyle="inherit">
                                 HireMe
                             </Typography>
