@@ -1,30 +1,18 @@
-import {Avatar, Box, Button, Card, CardContent, TextField, Typography} from "@mui/material";
+import {Alert, Avatar, Box, Card, IconButton, TextField, Typography} from "@mui/material";
 import React, {useEffect, useState} from "react";
 import {useLocation} from "react-router-dom";
 import {getAuthToken} from "../../services/BackendService";
 import HRNavbar from "../../components/HRNavbar";
-
-const cardStyle = {
-    position: 'absolute',
-    top: '12%',
-    left: '5%',
-    right: '52%',
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-}
-
-const cardStyle4 = {
-    position: 'absolute',
-    top: '80%',
-    left: '5%',
-    right: '52%',
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-}
+import {grey} from "@mui/material/colors";
+import {format} from "date-fns";
+import SendIcon from "@mui/icons-material/Send";
+import FavoriteIcon from "@mui/icons-material/Favorite";
 
 const avatarStyle = {
-    width: '230px',
-    height: '230px',
+    width: '200px',
+    height: '200px',
+    mt: '10px',
     margin: 'auto',
-    mt: '10px'
 }
 
 const typographyStyle = {
@@ -33,44 +21,7 @@ const typographyStyle = {
 
 const textFieldStyle = {
     left: '10%',
-    mr: '20px',
-    mt: '20px',
-    width: '300px'
-}
-
-const buttonStyle = {
-    margin: '0',
-    bgcolor: 'rgb(96,58,120)',
-    color: 'white',
-    borderRadius: '5px',
-    top: '30%',
-}
-
-const cardStyle2 = {
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-    width: '200px',
-    height: '280px',
-    mr: '13px',
-    mb: '13px',
-    textAlign: 'center',
-    flexShrink: '0',
-}
-
-const cardStyle3 = {
-    position: 'absolute',
-    top: '12%',
-    left: '52%',
-    right: '5%',
-    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
-}
-
-const boxStyle = {
-    position: 'absolute',
-    left: '52%',
-    right: '5%',
-    top: '35%',
-    display: 'flex',
-    flexWrap: 'wrap'
+    width: '100%',
 }
 
 export default function Candidate(){
@@ -84,6 +35,11 @@ export default function Candidate(){
     const[opinions, setOpinions] = useState([]);
     const[opinionContext, setOpinionContext] = useState("");
     const[message, setMessage] = useState("");
+
+    const[opinionSend, setOpinionSend] = useState("");
+
+    const[serverMessage, setServerMessage] = useState<null | string>(null);
+    const[error, setError] = useState<null | string>(null);
 
     const location = useLocation();
 
@@ -115,13 +71,24 @@ export default function Candidate(){
                     setFile(data["photoFilePath"])
                 }
             })
+        }
+        catch (error) {
+            console.error("Błąd pobierania danych: ", error);
+        }
+    }, []);
+
+    useEffect(() => {
+        try{
+            const formData = new FormData();
+
+            formData.append('id', location.state.id);
 
             fetch("http://localhost:8080/userHR/getOpinions", {
                 method: "POST",
                 headers: {'Authorization': `Bearer ${getAuthToken()}`},
                 body: formData
             }).then(res => {
-                if (res.status == 200) {
+                if (res.status === 200) {
                     return res.json();
                 }
                 else {
@@ -136,22 +103,36 @@ export default function Candidate(){
         catch (error) {
             console.error("Błąd pobierania danych: ", error);
         }
-    }, []);
+    }, [opinionSend]);
 
-    const handleClick = async () => {
+    const handleClick = () => {
         try{
             const formData = new FormData();
 
             formData.append('idCandidate', location.state.id);
 
-            await fetch("http://localhost:8080/userHR/addFavourite", {
+            fetch("http://localhost:8080/userHR/addFavourite", {
                 method: "POST",
                 headers: {'Authorization': `Bearer ${getAuthToken()}`},
                 body: formData
+            }).then(async response => {
+                if (response.status === 200){
+                    return response.json();
+                }
+                const msg = await response.json();
+                throw new Error(msg["message"]);
+            }).then(data => {
+                if (data !== null){
+                    setServerMessage(data['message']);
+                }
+            }).catch((error) => {
+                setError((error as Error).message);
+                console.error(error);
             })
         }
         catch (error) {
-            console.error("Błąd dodawania kadydata do ulubionych: ", error);
+            setError((error as Error).message);
+            console.error((error as Error).message);
         }
     }
 
@@ -161,8 +142,7 @@ export default function Candidate(){
             formData.append('idCandidate', location.state.id);
 
             if (opinionContext.length === 0){
-                console.error("Opinia nie może być pusta");
-                return null;
+               throw new Error("Opinia nie może być pusta!");
             }
             else{
                 formData.append('opinion', opinionContext);
@@ -174,7 +154,10 @@ export default function Candidate(){
                 body: formData
             }).then(response => {
                 if (response.status == 200) {
-                    console.log("Komentarz został dodany")
+                    console.log("Komentarz został dodany");
+                    setOpinionSend(opinionContext);
+                    setOpinionContext("");
+                    setError(null);
                 }
                 else{
                     console.error("Błąd dodawania komentarza")
@@ -183,7 +166,8 @@ export default function Candidate(){
 
         }
         catch (error) {
-            console.error("Błąd dodawania komentarza: ", error);
+            setError((error as Error).message);
+            console.error((error as Error).message);
         }
     }
 
@@ -193,8 +177,7 @@ export default function Candidate(){
             formData.append('idCandidate', location.state.id);
 
             if (message.length === 0){
-                console.error("Wiadomość nie może być pusta");
-                return null;
+                throw new Error("Wiadomość nie może być pusta!");
             }
             else{
                 formData.append('message', message);
@@ -206,7 +189,9 @@ export default function Candidate(){
                 body: formData
             }).then(response => {
                 if (response.status == 200) {
-                    console.log("Wiadomość została wysłana")
+                    console.log("Wiadomość została wysłana");
+                    setMessage("");
+                    setError(null);
                 }
                 else{
                     console.error("Błąd wysyłania wiadomości")
@@ -214,50 +199,141 @@ export default function Candidate(){
             })
         }
         catch (error) {
-            console.error("Błąd wysyłania wiadomości: ", error);
+            setError((error as Error).message);
+            console.error((error as Error).message);
+        }
+    }
+
+    const handleKeyDownMessage = (e: any) => {
+        if (e.code === "Enter") {
+            e.preventDefault();
+            handleSendMessage();
+        }
+    }
+
+    const handleKeyDownOpinion = (e: any) => {
+        if (e.code === "Enter") {
+            e.preventDefault();
+            handleSubmit();
         }
     }
 
     return (
-        <Box>
+        <Box sx={{bgcolor: grey[200], height: '100%', width: '100%', left: 0, top: 0, overflow: 'auto', position: 'fixed'}}>
             <HRNavbar />
-            <Box>
-                <Card sx={cardStyle}>
-                    <Avatar src={"data:image/png;base64,"+file} sx={avatarStyle}></Avatar>
-                    <label>Imię: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{firstName}</Typography>
-                    <label>Nazwisko: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{lastName}</Typography>
-                    <label>Email: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{email}</Typography>
-                    <label>Numer telefonu: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{phoneNumber}</Typography>
-                    <label>Opis: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{description}</Typography>
-                    <label>Profesja: </label>
-                    <Typography variant="subtitle1" sx={typographyStyle}>{profession}</Typography>
-                    <Button onClick={() => handleClick()} sx={buttonStyle}>Dodaj do ulubionych</Button>
+            {error &&
+                <Box sx={{display: 'flex', justifyContent: "center", textAlign: "center", margin: 2}}>
+                    <Alert severity="error">{error}</Alert>
+                </Box>
+            }
+            {serverMessage &&
+                <Box sx={{display: 'flex', justifyContent: "center", textAlign: "center", margin: 2}}>
+                    <Alert severity="success">{serverMessage}</Alert>
+                </Box>
+            }
+            <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 4}}>
+                <Card sx={{
+                    position: 'relative',
+                    padding: 1,
+                    width: '750px',
+                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+                    overflow: 'hidden',
+                    '&:hover': { background: 'radial-gradient(circle, rgba(211,185,227,1) 0%, rgba(210,210,210,1) 100%, rgba(0,212,255,1) 100%)'},
+                }}>
+                    <Box sx={{display: 'flex'}}>
+                        <Box sx={{
+                            width: '40%',
+                            overflow: 'hidden',
+                            padding: 1,
+                            minWidth: '200px',
+                        }}>
+                            <Avatar src={"data:image/png;base64,"+file} sx={avatarStyle}></Avatar>
+                        </Box>
+                        <Box sx={{
+                            width: '60%',
+                            overflow: 'hidden',
+                            padding: 2,
+                            minWidth: '400px',
+                        }}>
+                            <Typography variant="h6" sx={typographyStyle}>Imię: {firstName}</Typography>
+                            <Typography variant="h6" sx={typographyStyle}>Nazwisko: {lastName}</Typography>
+                            <Typography variant="h6" sx={typographyStyle}>Email: {email}</Typography>
+                            <Typography variant="h6" sx={typographyStyle}>Numer kontaktowy: {phoneNumber}</Typography>
+                            <Typography variant="h6" sx={typographyStyle}>Profesja: {profession}</Typography>
+                        </Box>
+                    </Box>
+                    <Box sx={{margin: 1, mt: 2}}>
+                        <Typography variant="body1" sx={{wordWrap: 'normal'}}>{description}</Typography>
+                    </Box>
+                    <IconButton
+                        color="primary"
+                        onClick={() => handleClick()}
+                        aria-label="dodaj do ulubionych"
+                        sx={{
+                            bgcolor: 'rgb(96,58,120)',
+                            color: "white",
+                            '&:hover': { bgcolor: "rgb(207, 159, 255)"},
+                            right: '1%',
+                            margin: 1
+                        }}
+                    >
+                        <FavoriteIcon />
+                    </IconButton>
                 </Card>
-                <Card sx={cardStyle}>
-                    <TextField
-                        label="Wiadomość"
-                        onChange={e => setMessage(e.target.value)}
-                        variant="standard"
-                        color="secondary"
-                        type="text"
-                        sx={textFieldStyle}
-                        value={message}
-                        helperText="Napisz wiadomość do kandydata"
-                        multiline
-                        maxRows={8}
-                    />
-                </Card>
-                <Button onClick={() => handleSendMessage()} sx={buttonStyle}>Wyślij wiadomość</Button>
             </Box>
-            <Box>
-                <Card sx={cardStyle3}>
-                    <CardContent>
-                        <Typography variant="h4" sx={typographyStyle}>Dodaj opinie</Typography>
+            <Box sx={{display: 'flex', alignItems: 'center', justifyContent: 'center', mt: 3}}>
+                <Card sx={{
+                    position: 'relative',
+                    padding: 1,
+                    width: '500px',
+                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+                    overflow: 'hidden',
+                    '&:hover': { background: 'radial-gradient(circle, rgba(211,185,227,1) 0%, rgba(210,210,210,1) 100%, rgba(0,212,255,1) 100%)'},
+                    margin: 1,
+                    display: 'flex'
+                }}>
+                    <Box sx={{width: "60%"}}>
+                        <TextField
+                            label="Wiadomość"
+                            onChange={e => setMessage(e.target.value)}
+                            variant="standard"
+                            color="secondary"
+                            type="text"
+                            sx={textFieldStyle}
+                            value={message}
+                            helperText="Napisz wiadomość do kandydata"
+                            onKeyDown={handleKeyDownMessage}
+                            multiline
+                            maxRows={8}
+                        />
+                    </Box>
+                    <Box sx={{ml: 10}}>
+                        <IconButton
+                            color="primary"
+                            onClick={handleSendMessage}
+                            aria-label="wyślij wiadomość"
+                            sx={{
+                                bgcolor: 'rgb(96,58,120)',
+                                color: "white",
+                                '&:hover': { bgcolor: "rgb(207, 159, 255)"},
+                                transform: 'translate(50%, 50%)'
+                            }}
+                        >
+                            <SendIcon />
+                        </IconButton>
+                    </Box>
+                </Card>
+                <Card sx={{
+                    position: 'relative',
+                    padding: 1,
+                    width: '500px',
+                    boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+                    overflow: 'hidden',
+                    '&:hover': { background: 'radial-gradient(circle, rgba(211,185,227,1) 0%, rgba(210,210,210,1) 100%, rgba(0,212,255,1) 100%)'},
+                    margin: 1,
+                    display: 'flex'
+                }}>
+                    <Box sx={{width: "60%"}}>
                         <TextField
                             label="Opinia"
                             onChange={e => setOpinionContext(e.target.value)}
@@ -266,22 +342,64 @@ export default function Candidate(){
                             type="text"
                             sx={textFieldStyle}
                             value={opinionContext}
+                            onKeyDown={handleKeyDownOpinion}
                             helperText="Napisz opinię na temat współpracy z pracownikiem"
                             multiline
                             maxRows={8}
                         />
-                        <Button onClick={() => handleSubmit()} sx={buttonStyle}>Dodaj opinię</Button>
-                    </CardContent>
+                    </Box>
+                    <Box sx={{ml: 10}}>
+                        <IconButton
+                            color="primary"
+                            onClick={handleSubmit}
+                            aria-label="wyślij wiadomość"
+                            sx={{
+                                bgcolor: 'rgb(96,58,120)',
+                                color: "white",
+                                '&:hover': { bgcolor: "rgb(207, 159, 255)"},
+                                transform: 'translate(50%, 50%)'
+                            }}
+                        >
+                            <SendIcon />
+                        </IconButton>
+                    </Box>
                 </Card>
             </Box>
-            <Box sx={boxStyle}>
+            <Box sx={{
+                mt: 8,
+            }}>
                 {
                     opinions.map(opinion => (
-                        <Card key={opinion["id"]} sx={cardStyle2}>
-                            <Avatar src={"data:image/png;base64,"+opinion["image"]}/>
-                            <Typography variant="h6" sx={typographyStyle}>{opinion["name"]} {opinion["lastName"]} | {opinion["companyName"]}</Typography>
-                            <Typography variant="subtitle2" sx={typographyStyle}>{opinion["dateTime"]}</Typography>
-                            <Typography variant="subtitle1" sx={typographyStyle}>{opinion["opinion"]}</Typography>
+                        <Card key={opinion["id"]} sx={{
+                            position: 'relative',
+                            ml: '10%',
+                            mr: '10%',
+                            mb: 2,
+                            boxShadow: '0 4px 8px 0 rgba(0, 0, 0, 0.2), 0 6px 20px 0 rgba(0, 0, 0, 0.19)',
+                            '&:hover': { background: 'radial-gradient(circle, rgba(211,185,227,1) 0%, rgba(210,210,210,1) 100%, rgba(0,212,255,1) 100%)'},
+                        }}>
+                            <Box sx={{display: 'flex'}}>
+                                <Avatar src={"data:image/png;base64,"+opinion["image"]} sx={{
+                                    margin: 1,
+                                    height: '35px',
+                                    width: '35px'
+                                }}/>
+                                <Typography variant="h6" sx={{
+                                    mt: 1.5
+                                }}>
+                                    {opinion["name"]} {opinion["lastName"]} | {opinion["companyName"]}
+                                </Typography>
+                            </Box>
+                            <Typography variant="body1" sx={{
+                                ml: 3,
+                                mt: 0.5,
+                                mb: 2
+                            }}>
+                                {opinion["opinion"]}
+                            </Typography>
+                            <Typography variant="caption" sx={{
+                                ml: 1,
+                            }}>{format(opinion["dateTime"],"d.MM.yyyy H:mm")}</Typography>
                         </Card>
                     ))
                 }

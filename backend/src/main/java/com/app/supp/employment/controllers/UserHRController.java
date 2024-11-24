@@ -3,10 +3,12 @@ package com.app.supp.employment.controllers;
 import com.app.supp.employment.models.*;
 import com.app.supp.employment.payload.response.ContactResponse;
 import com.app.supp.employment.payload.response.GetMessagesResponse;
+import com.app.supp.employment.payload.response.MessageResponse;
 import com.app.supp.employment.payload.response.OpinionResponse;
 import com.app.supp.employment.repository.*;
 import com.app.supp.employment.security.services.UserDetailsImpl;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
@@ -88,12 +90,15 @@ public class UserHRController {
             Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
             UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
 
-            if(candidateRepository.existsById(idCandidate)){
-                favouriteRepository.save(new Favourite(idCandidate, currentUser.getId()));
-                return ResponseEntity.ok().build();
+            if(favouriteRepository.existsByIdCandidate(idCandidate)){
+                return ResponseEntity
+                        .status(HttpStatus.CONFLICT)
+                        .body(new MessageResponse("Użytkownik widnieje już na Twojej liście ulubionych!"));
             }
 
-            return ResponseEntity.notFound().build();
+            favouriteRepository.save(new Favourite(idCandidate, currentUser.getId()));
+
+            return ResponseEntity.ok().body(new MessageResponse("Użytkownik dodany do lisy ulubionych!"));
         } catch (Exception e){
             return ResponseEntity.notFound().build();
         }
