@@ -1,12 +1,11 @@
 package com.app.supp.employment.controllers;
 
 import com.app.supp.employment.models.*;
-import com.app.supp.employment.payload.response.ContactResponse;
-import com.app.supp.employment.payload.response.GetMessagesResponse;
-import com.app.supp.employment.payload.response.MessageResponse;
-import com.app.supp.employment.payload.response.OpinionResponse;
+import com.app.supp.employment.payload.response.*;
 import com.app.supp.employment.repository.*;
 import com.app.supp.employment.security.services.UserDetailsImpl;
+import jakarta.annotation.Nullable;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -16,9 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @RestController
 @RequestMapping("/userHR")
@@ -233,6 +230,103 @@ public class UserHRController {
 
             return ResponseEntity.ok().body(response);
         } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @PostMapping("/getCandidatesFilter")
+    public ResponseEntity<?> getCandidatesFilter(@Nullable @RequestParam String city, @Nullable @RequestParam String profession, @RequestParam String minAge, @RequestParam String maxAge) {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            List<Candidate> candidatesCity;
+            List<Candidate> candidatesProfession;
+            List<Candidate> candidatesMinAge;
+            List<Candidate> candidatesMaxAge;
+
+            List<Candidate> filteredCandidates = new ArrayList<>();
+
+            int counter = 0;
+
+            if(!Objects.equals(city, "")){
+                candidatesCity = candidateRepository.findAllByCity(city);
+                if(!candidatesCity.isEmpty()){
+                    counter++;
+                    filteredCandidates.addAll(candidatesCity);
+                }
+            }
+
+            if(!Objects.equals(profession, "")){
+                candidatesProfession = candidateRepository.findAllByProfession(profession);
+                if(!candidatesProfession.isEmpty()){
+                    counter++;
+                    filteredCandidates.addAll(candidatesProfession);
+                }
+            }
+
+            if(!Objects.equals(minAge, "")){
+                candidatesMinAge = candidateRepository.findAllWhereAgeGreaterThan(Integer.parseInt(minAge));
+                if(!candidatesMinAge.isEmpty()){
+                    counter++;
+                    filteredCandidates.addAll(candidatesMinAge);
+                }
+            }
+
+            if(!Objects.equals(maxAge, "")){
+                candidatesMaxAge = candidateRepository.findAllWhereAgeLessThan(Integer.parseInt(maxAge));
+                if(!candidatesMaxAge.isEmpty()){
+                    counter++;
+                    filteredCandidates.addAll(candidatesMaxAge);
+                }
+            }
+
+            HashMap<Candidate, Integer> candidates = new HashMap<>();
+
+            for(Candidate candidate : filteredCandidates){
+                if(candidates.containsKey(candidate)){
+                    candidates.put(candidate, candidates.get(candidate) + 1);
+                }
+                else{
+                    candidates.put(candidate, 1);
+                }
+            }
+
+            List<Candidate> finalCandidates = new ArrayList<>();
+
+            for(Candidate candidate : candidates.keySet()){
+                if(candidates.get(candidate) == counter){
+                    finalCandidates.add(candidate);
+                }
+            }
+
+            List<Candidate> favourites = new ArrayList<>();
+
+            for(Candidate candidate : finalCandidates){
+                if(favouriteRepository.existsByIdCandidateAndIdCompany(candidate.getId(), currentUser.getId())){
+                    favourites.add(candidate);
+                }
+            }
+
+            return ResponseEntity.ok().body(new FilterResponse(finalCandidates, favourites));
+
+        } catch (Exception e){
+            return ResponseEntity.notFound().build();
+        }
+    }
+
+    @DeleteMapping("/deleteFavourite")
+    @Transactional
+    public ResponseEntity<?> deleteFavourite(@RequestParam String id) {
+        try{
+            Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+            UserDetailsImpl currentUser = (UserDetailsImpl) authentication.getPrincipal();
+
+            favouriteRepository.deleteByIdCandidateAndIdCompany(Integer.parseInt(id), currentUser.getId());
+
+            return ResponseEntity.ok().body(new MessageResponse("Użytkownik został usunięty z listy ulubionych"));
+        } catch (Exception e){
+            System.out.println(e.getMessage());
             return ResponseEntity.notFound().build();
         }
     }

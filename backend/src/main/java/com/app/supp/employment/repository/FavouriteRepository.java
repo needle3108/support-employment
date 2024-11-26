@@ -8,4 +8,6 @@ import java.util.List;
 public interface FavouriteRepository extends JpaRepository<Favourite, Integer> {
     List<Favourite> findAllByIdCompany(int idCompany);
     boolean existsByIdCandidate(int idCandidate);
+    boolean existsByIdCandidateAndIdCompany(int idCandidate, int idCompany);
+    void deleteByIdCandidateAndIdCompany(int idCandidate, int idCompany);
 }
