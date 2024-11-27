@@ -36,7 +36,7 @@ export default function UserNavbar(){
 
     useEffect(() => {
         try{
-            fetch("http://localhost:8080/user/getImage", {
+            fetch("http://localhost:8080/user/profile", {
                 method: "GET",
                 headers: {'Authorization': `Bearer ${getAuthToken()}`},
             }).then(response => {

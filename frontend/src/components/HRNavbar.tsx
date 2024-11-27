@@ -37,7 +37,7 @@ export default function HRNavbar(){
 
     useEffect(() => {
         try{
-            fetch("http://localhost:8080/userHR/getImage", {
+            fetch("http://localhost:8080/userHR/profile", {
                 method: "GET",
                 headers: {'Authorization': `Bearer ${getAuthToken()}`},
             }).then(response => {

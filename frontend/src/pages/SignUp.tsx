@@ -146,19 +146,19 @@ export default function SignUp(){
             fetch("http://localhost:8080/auth/signupHR", {
                 method: "POST",
                 body: formData
-            }).then(response => {
+            }).then(async response => {
                 if (response.status === 200) {
                     return response.json();
                 }
-            }).catch((error) => {
-                if(error.response) setError(error.response.data);
+                const msg = await response.json();
+                throw new Error(msg["message"]);
             }).then(data => {
                 if (data !== null) {
-                    setTimeout(navigate, 0, "/login", { replace: true },);
+                    setTimeout(navigate, 0, "/login", { replace: true });
                 }
-                else{
-                    setTimeout(navigate, 0, "/signupHR", { replace: true});
-                }
+            }).catch((error) => {
+                setError((error as Error).message);
+                console.error(error);
             })
         } catch (error) {
             setError((error as Error).message);

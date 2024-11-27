@@ -121,14 +121,23 @@ export default function HRProfile(){
                 if (result.status == 200){
                     return result.json();
                 }
+
             }).then(data => {
                 if(data !== null){
                     setCandidates(data['candidates']);
                     setFavourites(data['favourites']);
+
                     if(error !== null){
                         setError(null);
                     }
+
+                    if(candidates.length == 0){
+                        throw new Error("Nie zanleziono kandydatów spełniających podane kryteria")
+                    }
                 }
+            }).catch((error) => {
+                setError((error as Error).message);
+                console.error(error);
             })
         }
         catch(error){
