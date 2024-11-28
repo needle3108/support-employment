@@ -17,10 +17,10 @@ public interface CandidateRepository extends JpaRepository<Candidate, Integer> {
 
     List<Candidate> findAllByProfession(String profession);
 
-    @Query("SELECT u from Candidate  u WHERE u.age >= ?1")
+    @Query("SELECT u from Candidate u WHERE TIMESTAMPDIFF(YEAR, u.dateOfBirth, CURDATE()) >= ?1")
     List<Candidate> findAllWhereAgeGreaterThan(int age);
 
-    @Query("SELECT u from Candidate  u WHERE u.age <= ?1")
+    @Query("SELECT u from Candidate u WHERE TIMESTAMPDIFF(YEAR, u.dateOfBirth, CURDATE()) <= ?1")
     List<Candidate> findAllWhereAgeLessThan(int age);
 }
 

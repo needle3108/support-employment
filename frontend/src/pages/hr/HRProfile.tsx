@@ -124,15 +124,16 @@ export default function HRProfile(){
 
             }).then(data => {
                 if(data !== null){
+                    if(data["candidates"].length === 0){
+                        throw new Error("Nie znaleziono kandydatów spełniających podane kryteria!")
+                    }
+                    console.error(data["candidates"][0])
+                    console.error(data['candidates'].length)
                     setCandidates(data['candidates']);
                     setFavourites(data['favourites']);
 
                     if(error !== null){
                         setError(null);
-                    }
-
-                    if(candidates.length == 0){
-                        throw new Error("Nie zanleziono kandydatów spełniających podane kryteria")
                     }
                 }
             }).catch((error) => {

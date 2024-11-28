@@ -12,7 +12,7 @@ CREATE TABLE IF NOT EXISTS candidate(
     city VARCHAR(255) NOT NULL,
     description VARCHAR(2000) DEFAULT NULL,
     photo_file_path MEDIUMBLOB DEFAULT NULL,
-    age INT NOT NULL,
+    date_of_birth DATE,
     profession VARCHAR(255) NOT NULL,
     role VARCHAR(255) NOT NULL,
 

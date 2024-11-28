@@ -56,6 +56,12 @@ public class AuthController {
                     .body(new MessageResponse("Email jest już w użyciu!"));
         }
 
+        if (authService.isUnderSixteen(signupRequest.getDateOfBirth())){
+            return ResponseEntity
+                    .status(HttpStatus.CONFLICT)
+                    .body(new MessageResponse("Musisz mieć ukończone 16 lat!"));
+        }
+
         if (authService.addCandidate(signupRequest)){
             return ResponseEntity.ok().body(new MessageResponse("Rejestracja przebiegła pomyślnie"));
         }

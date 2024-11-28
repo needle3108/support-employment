@@ -27,7 +27,7 @@ public class SignupRequest implements Serializable {
     @NotBlank
     private String city;
 
-    private String age;
+    private String dateOfBirth;
 
     private String description;
 

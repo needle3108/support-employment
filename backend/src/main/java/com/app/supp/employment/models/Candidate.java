@@ -4,6 +4,8 @@ import jakarta.persistence.*;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.time.LocalDate;
+
 @Entity
 @Table(name = "Candidate",
     uniqueConstraints = {
@@ -36,14 +38,14 @@ public class Candidate {
 
     private String profession;
 
-    private int age;
+    private LocalDate dateOfBirth;
 
     @Column(nullable = false)
     private String role;
 
     public Candidate() {}
 
-    public Candidate(String email, String firstName, String lastName, String password, String phoneNumber, String city, String description, byte[] photoFilePath, int age, String profession) {
+    public Candidate(String email, String firstName, String lastName, String password, String phoneNumber, String city, String description, byte[] photoFilePath, LocalDate dateOfBirth, String profession) {
         this.email = email;
         this.firstName = firstName;
         this.lastName = lastName;
@@ -52,7 +54,7 @@ public class Candidate {
         this.city = city;
         this.description = description;
         this.photoFilePath = photoFilePath;
-        this.age = age;
+        this.dateOfBirth = dateOfBirth;
         this.profession = profession;
     }
 }

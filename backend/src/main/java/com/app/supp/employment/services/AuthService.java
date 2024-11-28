@@ -11,6 +11,8 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import java.io.IOException;
+import java.time.LocalDate;
+import java.time.temporal.ChronoUnit;
 
 @Service
 public class AuthService {
@@ -43,7 +45,7 @@ public class AuthService {
                     signupRequest.getCity(),
                     signupRequest.getDescription(),
                     signupRequest.getFile().getBytes(),
-                    Integer.parseInt(signupRequest.getAge()),
+                    LocalDate.parse(signupRequest.getDateOfBirth()),
                     signupRequest.getProfession());
 
             candidate.setRole("USER");
@@ -78,4 +80,10 @@ public class AuthService {
             return false;
         }
     }
+
+    public boolean isUnderSixteen(String date){
+        System.out.println(ChronoUnit.YEARS.between(LocalDate.parse(date), LocalDate.now()));
+        return ChronoUnit.YEARS.between(LocalDate.parse(date), LocalDate.now()) < 16;
+    }
+
 }

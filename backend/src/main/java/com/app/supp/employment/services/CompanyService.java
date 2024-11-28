@@ -104,45 +104,28 @@ public class CompanyService {
     }
 
     public FilterResponse doFilter(String city, String profession, String minAge, String maxAge, int idCompany){
-        List<Candidate> candidatesCity;
-        List<Candidate> candidatesProfession;
-        List<Candidate> candidatesMinAge;
-        List<Candidate> candidatesMaxAge;
-
         List<Candidate> filteredCandidates = new ArrayList<>();
 
         int counter = 0;
 
         if(!Objects.equals(city, "")){
-            candidatesCity = candidateService.findAllByCity(city);
-            if(!candidatesCity.isEmpty()){
-                counter++;
-                filteredCandidates.addAll(candidatesCity);
-            }
+            counter++;
+            filteredCandidates.addAll(candidateService.findAllByCity(city));
         }
 
         if(!Objects.equals(profession, "")){
-            candidatesProfession = candidateService.findAllByProfession(profession);
-            if(!candidatesProfession.isEmpty()){
-                counter++;
-                filteredCandidates.addAll(candidatesProfession);
-            }
+            counter++;
+            filteredCandidates.addAll(candidateService.findAllByProfession(profession));
         }
 
         if(!Objects.equals(minAge, "")){
-            candidatesMinAge = candidateService.findAllWhereAgeGreaterThan(Integer.parseInt(minAge));
-            if(!candidatesMinAge.isEmpty()){
-                counter++;
-                filteredCandidates.addAll(candidatesMinAge);
-            }
+            counter++;
+            filteredCandidates.addAll(candidateService.findAllWhereAgeGreaterThan(Integer.parseInt(minAge)));
         }
 
         if(!Objects.equals(maxAge, "")){
-            candidatesMaxAge = candidateService.findAllWhereAgeLessThan(Integer.parseInt(maxAge));
-            if(!candidatesMaxAge.isEmpty()){
-                counter++;
-                filteredCandidates.addAll(candidatesMaxAge);
-            }
+            counter++;
+            filteredCandidates.addAll(candidateService.findAllWhereAgeLessThan(Integer.parseInt(maxAge)));
         }
 
         HashMap<Candidate, Integer> candidates = new HashMap<>();

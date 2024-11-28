@@ -4,6 +4,10 @@ import {useLocation, useNavigate} from "react-router-dom";
 import AddAPhotoIcon from '@mui/icons-material/AddAPhoto';
 import Navbar from "../components/Navbar";
 import {grey} from "@mui/material/colors";
+import {DatePicker, LocalizationProvider} from "@mui/x-date-pickers";
+import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
+import dayjs, {Dayjs} from "dayjs";
+import {format} from "date-fns";
 
 const cardStyle = {
     position: 'relative',
@@ -51,7 +55,7 @@ export default function SignUp(){
     const [firstName, setFirstName] = useState("");
     const [lastName, setLastName] = useState("");
     const [city, setCity] = useState("");
-    const [age, setAge] = useState(20);
+    const [dateOfBirth, setDateOfBirth] = useState<Dayjs | null>(dayjs());
     const [description, setDescription] = useState("");
     const [phoneNumber, setPhoneNumber] = useState("");
     const [profession, setProfession] = useState("");
@@ -88,7 +92,7 @@ export default function SignUp(){
             formData.append('firstName', firstName);
             formData.append('lastName', lastName);
             formData.append('city', city);
-            formData.append('age', age.toString());
+            formData.append('dateOfBirth', format(dateOfBirth!.toDate(), "yyyy-MM-dd"));
             formData.append('description', description);
             formData.append('phoneNumber', phoneNumber);
             formData.append('profession', profession);
@@ -228,16 +232,6 @@ export default function SignUp(){
                                     value={city}
                                 />
                                 <TextField
-                                    label="Wiek"
-                                    type="number"
-                                    onChange={e => setAge(parseInt(e.target.value, 10))}
-                                    required
-                                    variant="standard"
-                                    color="secondary"
-                                    sx={textFieldStyle}
-                                    value={age}
-                                />
-                                <TextField
                                     label="Numer kontaktowy"
                                     onChange={e => setPhoneNumber(e.target.value)}
                                     required
@@ -269,6 +263,22 @@ export default function SignUp(){
                                     multiline
                                     maxRows={8}
                                 />
+                                <LocalizationProvider
+                                    dateAdapter={AdapterDayjs}
+                                >
+                                    <DatePicker
+                                        label="Data urodzenia"
+                                        disableFuture={true}
+                                        onChange={(age) => setDateOfBirth(age)}
+                                        sx={{
+                                            position: 'relative',
+                                            margin: 2,
+                                            width: '25%',
+                                            ml: 17,
+                                            mt: 3,
+                                        }}
+                                    />
+                                </LocalizationProvider>
                                 <Box sx={divStyle} component="div">
                                     <Button component="label" sx={buttonStyle}>
                                         <AddAPhotoIcon/>
